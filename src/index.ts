@@ -2,9 +2,7 @@ import "./sass/_style.scss";
 import "./sass/_all.scss";
 
 const userOne: HTMLElement | null = document.getElementById("user");
-const avatarID: HTMLElement | null = document.getElementById("avatarID");
 const submit: HTMLElement | null = document.getElementById("submit");
-const commentForm: HTMLElement | null = document.getElementById("commentForm");
 
 let arrayComments: [] = [];
 const textarea = document.getElementById("textarea") as HTMLTextAreaElement;
@@ -20,18 +18,15 @@ class User {
   firstName: string;
   lastName: string;
   title: string;
-  arrayComments: [];
-
-  constructor(
-    firstName?: string,
-    lastName?: string,
-    title?: string,
-    arrayComments: [] = []
-  ) {
+  large: string;
+  constructor(firstName?: string, lastName?: string, title?: string) {
     this.firstName = firstName;
     this.lastName = lastName;
     this.title = title;
-    this.arrayComments = arrayComments;
+  }
+
+  start(): void {
+    this.fetchUserData();
   }
 
   async fetchUserData(): Promise<RandomUserResponse> {
@@ -50,40 +45,49 @@ class User {
     }
   }
   processUserData(userData: RandomUserResponse): void {
+    const avatarIMG = document.createElement("img");
+    const avatarID = document.getElementById("avatarID");
     const x = userData.results[0];
+    avatarIMG.src = x.picture.large;
+    avatarID.append(avatarIMG);
     userOne.textContent = `${x.name.title} ${x.name.first} ${x.name.last}`;
 
-    // console.log(
-    //   "Обработанные данные о пользователе:",
-    //   userData.results[0].name
-    // );
+    console.log("Обработанные данные о пользователе:", userData.results[0]);
   }
 
   submits(userData: RandomUserResponse): void {
     const x = userData.results[0];
-
+    const main: HTMLElement | null = document.getElementById("main");
+    const commentFormOne: HTMLElement = document.createElement("div");
+    commentFormOne.className = "commentForm";
+    main.append(commentFormOne);
     submit.addEventListener("click", function () {
+      commentFormOne.innerHTML = "";
       let newPost = {
         firstName: x.name.first,
         lastName: x.name.last,
         value: textarea.value,
+        img: x.picture.large,
       };
       let r = JSON.parse(localStorage.getItem("comments"));
 
       r.push(newPost);
       localStorage.setItem("comments", JSON.stringify(r));
 
-
       r.map(
-        (element: { firstName: string; lastName: string; value: string }) => {
+        (element: {
+          firstName: string;
+          lastName: string;
+          value: string;
+          img: string;
+        }) => {
           const comment: HTMLElement | null = document.createElement("div");
           comment.className = "comment";
           comment.id = "comment";
-          commentForm.append(comment);
-          // commentForm.innerHTML = "";
+          commentFormOne.append(comment);
 
           comment.innerHTML = ` <div class="comment_avatar avatar">
-            <img src="./../src/assets/img/test-1.jpg" alt="avatar" />
+            <img src='${element.img}' alt="avatar" />
           </div>
           <div class="comment_body">
             <div class="comment_body_header">
@@ -111,11 +115,11 @@ class User {
           </div>`;
         }
       );
+      textarea.value = "";
     });
   }
 }
 
 const user = new User();
-console.log(user);
-user.fetchUserData();
-// user.submits()
+
+user.start();
