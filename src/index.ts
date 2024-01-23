@@ -14,7 +14,9 @@ interface CommentData {
     hours: number;
     minutes: number;
     seconds: number;
+    id: number;
   };
+  like: number;
 }
 
 class Comment {
@@ -22,13 +24,15 @@ class Comment {
   private lastName: string;
   private value: string;
   private img: string;
-  private data: {
+  data: {
     month: number;
     day: number;
     hours: number;
     minutes: number;
     seconds: number;
+    id: number;
   };
+  like: number;
 
   constructor(data: CommentData) {
     this.firstName = data.firstName;
@@ -36,6 +40,7 @@ class Comment {
     this.value = data.value;
     this.img = data.img;
     this.data = data.data;
+    this.like = data.like;
   }
 
   generateHTML(): string {
@@ -62,10 +67,10 @@ class Comment {
             <img src="${heart_2}" />
             <span>В избранном </span>
           </div>
-          <div class="counter">
-            <div>-</div>
-            <div>6</div>
-            <div>+</div>
+          <div  class="counter">
+            <div id='counterMinus${this.data.id}' >-</div>
+            <div id='counterNumber${this.data.id}' >${this.like}</div>
+            <div id='counterPlus${this.data.id}' >+</div>
           </div>
         </div>
       </div>`;
@@ -76,6 +81,11 @@ class DOMHandler {
   static clearElement(element: HTMLElement): void {
     element.innerHTML = "";
   }
+  static countComments() {
+    document.getElementById("countComments").innerHTML = `(${
+      JSON.parse(localStorage.getItem("comments")).length
+    })`;
+  }
 
   static appendComment(parentElement: HTMLElement, commentHTML: string): void {
     const commentElement = document.createElement("div");
@@ -83,8 +93,38 @@ class DOMHandler {
     commentElement.id = "comment";
     commentElement.innerHTML = commentHTML;
     parentElement.append(commentElement);
+    this.counterLike();
   }
+  static counterLike(): void {
+    const id = JSON.parse(localStorage.getItem("comments"));
+    id.map((element: any) => {
+      console.log(element.like);
+      document.getElementById(
+        `counterNumber${element.data.id}`
+      ).innerHTML = `${element.like}`;
+      console.log(element);
+      document
+        .getElementById(`counterMinus${element.data.id}`)
+        .addEventListener("click", function () {
+          element.like--;
+          // localStorage.setItem("comments", JSON.stringify(element));
+          document.getElementById(
+            `counterNumber${element.data.id}`
+          ).innerHTML = `${element.like ? element.like : 0}`;
+        });
+      document
+        .getElementById(`counterPlus${element.data.id}`)
+        .addEventListener("click", function () {
+          element.like++;
+          //  localStorage.setItem("comments", JSON.stringify(element));
+          document.getElementById(
+            `counterNumber${element.data.id}`
+          ).innerHTML = `${element.like}`;
+        });
+    });
 
+    // localStorage.setItem("comments", JSON.stringify(t));
+  }
   static updateCounterText(counterText: HTMLElement, value: string): void {
     counterText.innerHTML = value;
   }
@@ -144,7 +184,7 @@ class User {
     if (this.userOne) {
       this.userOne.textContent = `${x.name.title} ${x.name.first} ${x.name.last}`;
     }
-    console.log("Обработанные данные о пользователе:", userData.results[0]);
+    // console.log("Обработанные данные о пользователе:", userData.results[0]);
   }
 
   submits(userData: any): void {
@@ -154,6 +194,7 @@ class User {
 
     this.submit.addEventListener("click", () => {
       DOMHandler.clearElement(this.commentFormOne);
+
       const x = userData.results[0];
       const newPost: CommentData = {
         firstName: x.name.first,
@@ -165,6 +206,7 @@ class User {
             : "2",
         img: x.picture.large,
         data: this.getData(),
+        like: 0,
       };
 
       let comments: CommentData[] = JSON.parse(
@@ -178,7 +220,7 @@ class User {
 
         DOMHandler.appendComment(this.commentFormOne, commentHTML);
       });
-
+      DOMHandler.countComments();
       this.textarea.value = "";
       DOMHandler.updateCounterText(
         document.getElementById("counterText"),
@@ -193,6 +235,7 @@ class User {
     hours: number;
     minutes: number;
     seconds: number;
+    id: number;
   } {
     const currentDateAndTime = new Date();
     const month = currentDateAndTime.getMonth() + 1;
@@ -200,6 +243,7 @@ class User {
     const hours = currentDateAndTime.getHours();
     const minutes = currentDateAndTime.getMinutes();
     const seconds = currentDateAndTime.getSeconds();
+    const id = currentDateAndTime.getTime();
 
     return {
       month,
@@ -207,6 +251,7 @@ class User {
       hours,
       minutes,
       seconds,
+      id,
     };
   }
 
