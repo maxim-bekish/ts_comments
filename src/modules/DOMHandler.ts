@@ -14,16 +14,29 @@ export class DOMHandler {
     document.getElementById("countComments").innerHTML = `(${commentCount})`;
   }
 
-  static appendComment(wrapperComment: HTMLElement, commentHTML: string): void {
+  static appendComment(
+    wrapperComment: HTMLElement,
+    commentHTML: string,
+    id: number
+  ): void {
     const main = document.getElementById("main");
     const allComments = document.getElementById("allComments");
     wrapperComment.className = "commentForm";
-    wrapperComment.id = `wrapperComment`;
+    wrapperComment.id = `wrapperComment${id}`;
 
     // Заполняем созданный элемент HTML-кодом комментария
     wrapperComment.innerHTML = commentHTML;
 
     main.append(allComments);
+  }
+  static appendAnswer(wrapperComment: HTMLElement) {
+  //  const x = new Comment(0).generateHTML();
+    const answer = document.createElement("div");
+    answer.className = "1";
+    answer.id = "1";
+    // answer.innerHTML = x;
+
+    wrapperComment.append(answer);
   }
   static counterLike(comments: CommentData[]): void {
     comments.forEach((element: any) => {

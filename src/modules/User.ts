@@ -3,7 +3,7 @@ import { DOMHandler } from "./DOMHandler";
 import { UserDataFetcher } from "./UserDataFetcher";
 import { CommentData } from "./types";
 import { Comment } from "./Comment";
-// import { Answer } from "./Answer";
+import { Answer } from "./Answer";
 
 export class User {
   private userOne: HTMLElement | null;
@@ -31,7 +31,7 @@ export class User {
     this.arrayComments = CommentDataController.getComments();
     this.renderComments();
     DOMHandler.counterLike(this.arrayComments);
-    // Answer.submit(this.arrayComments);
+    Answer.submit(this.arrayComments);
   }
 
   async fetchUserData(): Promise<any> {
@@ -163,14 +163,17 @@ export class User {
     // Перебираем массив комментариев (this.arrayComments)
     this.arrayComments.forEach((element) => {
       // Генерируем HTML-код для текущего комментария
+
       const commentHTML = new Comment(element).generateHTML();
+
       const wrapperComment = document.createElement("div");
       wrapperComment.className = "commentForm";
       wrapperComment.id = `wrapperComment-${element.data.id}`;
       this.allComments?.append(wrapperComment);
+      // Генерируем HTML-код для текущего ответа
 
       // Добавляем текущий комментарий в DOM, используя DOMHandler.appendComment
-      DOMHandler.appendComment(wrapperComment, commentHTML);
+      DOMHandler.appendComment(wrapperComment, commentHTML, element.data.id);
     });
 
     // Обновляем счетчик комментариев на странице

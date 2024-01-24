@@ -20,23 +20,66 @@ body {
       opacity: 40%;
     }
   }
-  .menu_filter {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    :nth-child(1) {
+  .custom-select {
+    position: relative;
+    width: 200px;
+    cursor: pointer;
+
+    .selected-option {
+      white-space:nowrap;
       text-decoration: underline;
-      font-size: 16px;
-      font-weight: 400;
-      line-height: 19px;
-      letter-spacing: 0em;
+      display: block;
+      font-family: "Inter";
+      padding: 10px;
+      font-size: 1rem;
       opacity: 40%;
+      line-height: 1.1875rem;
     }
-    :nth-child(2) {
-      font-size: 27px;
-      opacity: 40%;
+
+    .options-list {
+      border-radius: 5px;
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      width: 100%;
+      z-index: 3;
+      background-color: #fff;
+      box-shadow: 0 0px 10px #0000001a;
+      display: none;
+
+      li {
+        font-family: "Inter";
+        padding: 10px;
+        font-size: 1rem;
+        opacity: 40%;
+        line-height: 1.1875rem;
+
+        &:hover {
+          background-color: #f2f2f2;
+        }
+      }
     }
   }
+  // .menu_filter {
+  //   display: flex;
+  //   align-items: center;
+  //   gap: 5px;
+  //   :nth-child(1) {
+  //     text-decoration: underline;
+  //     font-size: 16px;
+  //     font-weight: 400;
+  //     line-height: 19px;
+  //     letter-spacing: 0em;
+  //     opacity: 40%;
+  //   }
+  //   :nth-child(2) {
+  //     font-size: 27px;
+  //     opacity: 40%;
+  //   }
+  // }
   .menu_favorites {
     text-decoration: underline;
     font-size: 16px;
@@ -108,9 +151,9 @@ body {
 }
 //-----------------//-----------------//-----------------//
 .commentForm {
-      gap: 25px;
-    display: flex;
-    flex-direction: column;
+  gap: 25px;
+  display: flex;
+  flex-direction: column;
   margin-top: 40px;
   .comment {
     display: flex;
@@ -200,7 +243,7 @@ body {
 
 .avatar {
   width: 60px;
- img {
+  img {
     min-width: 60px;
     height: 60px;
     border-radius: 50%;
