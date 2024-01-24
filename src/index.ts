@@ -17,6 +17,7 @@ interface CommentData {
     id: number;
   };
   like: number;
+  updateLike?: (newLike: number) => void;
 }
 
 class Comment {
@@ -75,6 +76,16 @@ class Comment {
         </div>
       </div>`;
   }
+  updateLike(newLike: number): void {
+    this.like = newLike;
+    // Обновите DOM-элемент для счетчика лайков
+    const counterElement = document.getElementById(
+      `counterNumber${this.data.id}`
+    );
+    if (counterElement) {
+      counterElement.innerHTML = `${newLike}`;
+    }
+  }
 }
 
 class DOMHandler {
@@ -83,7 +94,9 @@ class DOMHandler {
   }
   static countComments() {
     document.getElementById("countComments").innerHTML = `(${
-      JSON.parse(localStorage.getItem("comments")).length
+      JSON.parse(localStorage.getItem("comments"))?.length
+        ? JSON.parse(localStorage.getItem("comments")).length
+        : 0
     })`;
   }
 
@@ -93,37 +106,42 @@ class DOMHandler {
     commentElement.id = "comment";
     commentElement.innerHTML = commentHTML;
     parentElement.append(commentElement);
-    this.counterLike();
   }
-  static counterLike(): void {
-    const id = JSON.parse(localStorage.getItem("comments"));
-    id.map((element: any) => {
-      console.log(element.like);
-      document.getElementById(
-        `counterNumber${element.data.id}`
-      ).innerHTML = `${element.like}`;
-      console.log(element);
-      document
-        .getElementById(`counterMinus${element.data.id}`)
-        .addEventListener("click", function () {
-          element.like--;
-          // localStorage.setItem("comments", JSON.stringify(element));
-          document.getElementById(
-            `counterNumber${element.data.id}`
-          ).innerHTML = `${element.like ? element.like : 0}`;
-        });
-      document
-        .getElementById(`counterPlus${element.data.id}`)
-        .addEventListener("click", function () {
-          element.like++;
-          //  localStorage.setItem("comments", JSON.stringify(element));
-          document.getElementById(
-            `counterNumber${element.data.id}`
-          ).innerHTML = `${element.like}`;
-        });
-    });
+  static counterLike(comments: CommentData[]): void {
+    comments.forEach((element: any) => {
+      let q = document.getElementById(`counterNumber${element.data.id}`);
+      let w = document.getElementById(`counterMinus${element.data.id}`);
+      let e = document.getElementById(`counterPlus${element.data.id}`);
+      q.innerHTML = `${element.like}`;
 
-    // localStorage.setItem("comments", JSON.stringify(t));
+      w.addEventListener("click", function () {
+        element.like--;
+
+        q.innerHTML = `${element.like ? element.like : 0}`;
+        CommentDataController.updateComments(comments);
+        // Обновление счетчика лайков в реальном времени
+        const commentInstance = comments.find(
+          (comment) => comment.data.id === element.data.id
+        );
+        if (commentInstance && commentInstance.updateLike) {
+          commentInstance.updateLike(element.like);
+        }
+      });
+
+      e.addEventListener("click", function () {
+        element.like++;
+
+        q.innerHTML = `${element.like}`;
+        CommentDataController.updateComments(comments);
+        // Обновление счетчика лайков в реальном времени
+        const commentInstance = comments.find(
+          (comment) => comment.data.id === element.data.id
+        );
+        if (commentInstance && commentInstance.updateLike) {
+          commentInstance.updateLike(element.like);
+        }
+      });
+    });
   }
   static updateCounterText(counterText: HTMLElement, value: string): void {
     counterText.innerHTML = value;
@@ -145,7 +163,7 @@ class UserDataFetcher {
 
 class User {
   private userOne: HTMLElement | null;
-  private submit: HTMLElement | null;
+  private submit: HTMLButtonElement;
   private arrayComments: CommentData[];
   private textarea: HTMLTextAreaElement;
   private commentFormOne: HTMLDivElement;
@@ -153,14 +171,12 @@ class User {
 
   constructor() {
     this.userOne = document.getElementById("user");
-    this.submit = document.getElementById("submit");
+    this.submit = document.getElementById("submit") as HTMLButtonElement;
     this.arrayComments = [];
     this.textarea = document.getElementById("textarea") as HTMLTextAreaElement;
     this.commentFormOne = document.createElement("div");
     this.commentFormOne.className = "commentForm";
     this.main = document.getElementById("main");
-
-    localStorage.setItem("comments", JSON.stringify(this.arrayComments));
   }
 
   async start(): Promise<void> {
@@ -168,6 +184,9 @@ class User {
     this.processUserData(userData);
     this.submits(userData);
     this.counterText();
+    this.arrayComments = CommentDataController.getComments();
+    this.renderComments();
+    DOMHandler.counterLike(this.arrayComments);
   }
 
   async fetchUserData(): Promise<any> {
@@ -184,9 +203,20 @@ class User {
     if (this.userOne) {
       this.userOne.textContent = `${x.name.title} ${x.name.first} ${x.name.last}`;
     }
-    // console.log("Обработанные данные о пользователе:", userData.results[0]);
   }
-
+  disabledButton(): string {
+    let x: string;
+    if (
+      this.textarea.value.split("").length <= 1000 &&
+      this.textarea.value.split("").length > 0
+    ) {
+      this.submit.disabled = false;
+      x = this.textarea.value;
+    } else {
+      this.submit.disabled = true;
+    }
+    return x;
+  }
   submits(userData: any): void {
     if (!this.submit || !this.main) return;
 
@@ -199,33 +229,29 @@ class User {
       const newPost: CommentData = {
         firstName: x.name.first,
         lastName: x.name.last,
-        value:
-          this.textarea.value.split("").length <= 10 &&
-          this.textarea.value.split("").length > 0
-            ? this.textarea.value
-            : "2",
+        value: this.disabledButton(),
+
         img: x.picture.large,
         data: this.getData(),
         like: 0,
       };
 
-      let comments: CommentData[] = JSON.parse(
-        localStorage.getItem("comments")
-      );
+      let comments: CommentData[] = CommentDataController.getComments();
       comments.push(newPost);
-      localStorage.setItem("comments", JSON.stringify(comments));
 
-      comments.map((element) => {
-        const commentHTML = new Comment(element).generateHTML();
+      CommentDataController.updateComments(comments);
+      this.arrayComments = comments;
+      this.renderComments();
 
-        DOMHandler.appendComment(this.commentFormOne, commentHTML);
-      });
-      DOMHandler.countComments();
       this.textarea.value = "";
+      this.disabledButton();
+
       DOMHandler.updateCounterText(
         document.getElementById("counterText"),
         "Max 1000"
       );
+
+      DOMHandler.counterLike(this.arrayComments);
     });
   }
 
@@ -259,6 +285,7 @@ class User {
     if (!this.textarea) return;
 
     this.textarea.addEventListener("input", () => {
+      this.disabledButton();
       DOMHandler.updateCounterText(
         document.getElementById("counterText"),
         `${this.textarea.value.split("").length} /1000`
@@ -266,6 +293,7 @@ class User {
     });
 
     this.textarea.addEventListener("blur", () => {
+      this.disabledButton();
       DOMHandler.updateCounterText(
         document.getElementById("counterText"),
         this.textarea.value.split("").length > 0
@@ -275,6 +303,7 @@ class User {
     });
 
     this.textarea.addEventListener("focus", () => {
+      this.disabledButton();
       DOMHandler.updateCounterText(
         document.getElementById("counterText"),
         this.textarea.value.split("").length > 0
@@ -282,6 +311,26 @@ class User {
           : "0/1000"
       );
     });
+  }
+  renderComments(): void {
+    DOMHandler.clearElement(this.commentFormOne);
+
+    this.arrayComments.map((element) => {
+      const commentHTML = new Comment(element).generateHTML();
+      DOMHandler.appendComment(this.commentFormOne, commentHTML);
+    });
+
+    DOMHandler.countComments();
+  }
+}
+class CommentDataController {
+  static getComments(): CommentData[] {
+    const comments = JSON.parse(localStorage.getItem("comments")) || [];
+    return comments;
+  }
+
+  static updateComments(comments: CommentData[]): void {
+    localStorage.setItem("comments", JSON.stringify(comments));
   }
 }
 
