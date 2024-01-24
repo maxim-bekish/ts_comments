@@ -26,12 +26,13 @@ export class User {
   async start(): Promise<void> {
     const userData = await this.fetchUserData();
     this.processUserData(userData);
+
     this.submits(userData);
     this.counterText();
     this.arrayComments = CommentDataController.getComments();
     this.renderComments();
     DOMHandler.counterLike(this.arrayComments);
-    Answer.submit(this.arrayComments);
+    Answer.submit(this.arrayComments, userData);
   }
 
   async fetchUserData(): Promise<any> {

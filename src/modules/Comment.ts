@@ -1,4 +1,5 @@
 import heart_2 from "./../assets/svg/heart-2.svg";
+import share from "./../assets/svg/share.svg";
 import answerButton from "./../assets/svg/share.svg";
 import { CommentData } from "./types";
 export class Comment {
@@ -59,28 +60,35 @@ export class Comment {
       </div>
     </div>`;
   }
-  generateHTMLAnswer(): string {
+  generateHTMLAnswer(answerData: {
+    firstName: string;
+    lastName: string;
+    title: string;
+    img: string;
+    answer: string;
+    id: number;
+    month: number;
+    day: number;
+    hours: number;
+    minutes: number;
+  }): string {
     return `<div class="answer">
           <div class="answer_avatar avatar">
-            <img src="./../src/assets/img/test-1.jpg" alt="avatar" />
+            <img src="${answerData.img}" alt="avatar" />
           </div>
           <div class="answer_body">
             <div class="answer_body_header">
-              <h3 id="userTwo"></h3>
-              <img src="./../src/assets/svg/share.svg" alt="share" />
-              <span>Алексей_1994b </span>
-              <span>15.01 15:18</span>
+              <h3 id="userTwo">${answerData.title} ${answerData.firstName} ${answerData.lastName}</h3>
+              <img src="${share}" alt="share" />
+              <span>${this.firstName} ${this.lastName}</span>
+              <span>${answerData.day}.${answerData.month} ${answerData.hours}.${answerData.minutes}</span>
             </div>
             <div class="answer_body_main">
-              Наверное, самая большая ошибка создателей сериала была в том, что
-              они поставили уж слишком много надежд на поддержку фанатов
-              вселенной. Как оказалось на деле, большинство 'фанатов' с самой
-              настоящей яростью и желчью стали уничтожать сериал, при этом
-              объективности в отзывах самый минимум.
+              ${answerData.answer}
             </div>
             <div class="answer_body_footer">
               <div>
-                <img src="./../src/assets/svg/heart-3.svg" alt="" />
+                <img src="${heart_2}" alt="" />
                 <span> В Избранное </span>
               </div>
               <div class="counter">
