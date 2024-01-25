@@ -10,7 +10,8 @@ export class Answer {
           `wrapperComment${element.data.id}`
         );
 
-        const x = document.createElement("div");
+        const answerWrapper = document.createElement("div");
+
         const input = document.createElement("input");
         const button = document.createElement("button");
 
@@ -18,7 +19,16 @@ export class Answer {
         button.innerHTML = "submit";
 
         button.addEventListener("click", () => {
-          this.handleButtonClick(element, input, x, comments, userData);
+          this.handleButtonClick(
+            element,
+            input,
+            answerWrapper,
+
+            comments,
+            userData
+          );
+          button.style.display = "none";
+          input.style.display = "none";
         });
 
         document
@@ -29,7 +39,8 @@ export class Answer {
               element,
               input,
               button,
-              x
+
+              answerWrapper
             );
           });
       });
@@ -41,7 +52,7 @@ export class Answer {
   private static handleButtonClick(
     element: CommentData,
     input: HTMLInputElement,
-    x: HTMLDivElement,
+    answerWrapper: HTMLDivElement,
     comments: CommentData[],
     userData: any
   ): void {
@@ -62,6 +73,7 @@ export class Answer {
     element.answers = element.answers || [];
     element.answers.push(answerData);
 
+
     const updatedComments = this.updateCommentsWithAnswer(
       comments,
       element,
@@ -70,14 +82,10 @@ export class Answer {
 
     CommentDataController.updateComments(updatedComments);
 
-    const dom = new Comment(element).generateHTMLAnswer();
 
-    x.innerHTML = `${dom}`;
-    input.style.display = "none";
-    const button = document.getElementById(`answerButton${element.data.id}`);
-    if (button) {
-      button.style.display = "none";
-    }
+    const dom = new Comment(element, answerData).generateHTMLAnswer();
+
+    answerWrapper.insertAdjacentHTML("beforeend", `${dom}`);
   }
 
   private static handleAnswerButtonClick(
@@ -85,12 +93,12 @@ export class Answer {
     element: CommentData,
     input: HTMLInputElement,
     button: HTMLButtonElement,
-    x: HTMLDivElement
+    answerWrapper: HTMLDivElement
   ): void {
-    wrapperComment.append(x);
+    answerWrapper.id = `answerWrapper${new Date().getTime()}`;
+    wrapperComment.append(answerWrapper);
     wrapperComment.append(input);
     wrapperComment.append(button);
-    x.id = `answer${element.data.id}`;
   }
 
   private static updateCommentsWithAnswer(

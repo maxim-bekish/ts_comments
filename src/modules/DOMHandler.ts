@@ -30,11 +30,11 @@ export class DOMHandler {
     main.append(allComments);
   }
   static appendAnswer(wrapperComment: HTMLElement) {
-  //  const x = new Comment(0).generateHTML();
+ 
     const answer = document.createElement("div");
     answer.className = "1";
     answer.id = "1";
-    // answer.innerHTML = x;
+
 
     wrapperComment.append(answer);
   }

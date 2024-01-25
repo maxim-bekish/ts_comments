@@ -2,23 +2,23 @@ import heart_2 from "./../assets/svg/heart-2.svg";
 import share from "./../assets/svg/share.svg";
 import answerButton from "./../assets/svg/share.svg";
 import { Answer } from "./Answer";
-import { CommentData } from "./types";
+import { CommentData, AnswerData } from "./types";
 export class Comment {
   private firstName: string;
   private lastName: string;
   private value: string;
   private img: string;
-  like: number;
-  answerFirstName: string;
-  answerLastName: string;
-  answerTitle: string;
-  answerIMG: string;
-  answerText: string;
-  answerID: number;
-  answerMount: number;
-  answerDay: number;
-  answerHours: number;
-  answerMinutes: number;
+  private like: number;
+  private answerFirstName: string;
+  private answerLastName: string;
+  private answerTitle: string;
+  private answerIMG: string;
+  private answerText: string;
+  private answerID: number;
+  private answerMonth: number;
+  private answerDay: number;
+  private answerHours: number;
+  private answerMinutes: number;
   data: {
     month: number;
     day: number;
@@ -28,14 +28,26 @@ export class Comment {
     id: number;
   };
   answers: Answer[];
-  constructor(data: CommentData) {
+  constructor(data: CommentData, answerData?: AnswerData) {
     this.firstName = data.firstName;
     this.lastName = data.lastName;
     this.value = data.value;
     this.img = data.img;
     this.data = data.data;
     this.like = data.like;
+    if (answerData) {
+      this.answerIMG = answerData.img;
 
+      this.answerFirstName = answerData.firstName;
+      this.answerLastName = answerData.lastName;
+      this.answerTitle = answerData.title;
+      this.answerText = answerData.answer;
+      this.answerID = answerData.id;
+      this.answerMonth = answerData.month;
+      this.answerDay = answerData.day;
+      this.answerHours = answerData.hours;
+      this.answerMinutes = answerData.minutes;
+    }
   }
 
   generateHTML(): string {
@@ -75,23 +87,22 @@ export class Comment {
     </div>`;
   }
   generateHTMLAnswer(): string {
- 
     return `<div class="answer">
           <div class="answer_avatar avatar">
             <img src="${this.answerIMG}" alt="avatar" />
           </div>
           <div class="answer_body">
             <div class="answer_body_header">
-              <h3 id="userTwo">${this.answerTitle} ${this.answerFirstName} ${this.answerLastName}</h3>
+              <h3 id="userTwo">${this.answerFirstName} ${this.answerLastName}</h3>
               <img src="${share}" alt="share" />
               <span>${this.firstName} ${this.lastName}</span>
-              <span>${this.answerDay}.${this.answerMount} ${this.answerHours}.${this.answerMinutes}</span>
+              <span>${this.answerDay}.${this.answerMonth} ${this.answerHours}.${this.answerMinutes}</span>
             </div>
             <div class="answer_body_main">
               ${this.answerText}
             </div>
             <div class="answer_body_footer">
-              <div>
+              <div id='favoritesAnswer${this.answerID}' >
                 <img src="${heart_2}" alt="" />
                 <span> В Избранное </span>
               </div>
