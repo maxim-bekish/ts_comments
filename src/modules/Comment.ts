@@ -1,12 +1,24 @@
 import heart_2 from "./../assets/svg/heart-2.svg";
 import share from "./../assets/svg/share.svg";
 import answerButton from "./../assets/svg/share.svg";
+import { Answer } from "./Answer";
 import { CommentData } from "./types";
 export class Comment {
   private firstName: string;
   private lastName: string;
   private value: string;
   private img: string;
+  like: number;
+  answerFirstName: string;
+  answerLastName: string;
+  answerTitle: string;
+  answerIMG: string;
+  answerText: string;
+  answerID: number;
+  answerMount: number;
+  answerDay: number;
+  answerHours: number;
+  answerMinutes: number;
   data: {
     month: number;
     day: number;
@@ -15,8 +27,7 @@ export class Comment {
     seconds: number;
     id: number;
   };
-  like: number;
-
+  answers: Answer[];
   constructor(data: CommentData) {
     this.firstName = data.firstName;
     this.lastName = data.lastName;
@@ -24,9 +35,12 @@ export class Comment {
     this.img = data.img;
     this.data = data.data;
     this.like = data.like;
+
   }
 
   generateHTML(): string {
+    // Генерация HTML для ответов
+
     return `
     <div id="comment${this.data.id}"  class="comment">
       <div class="comment_avatar avatar">
@@ -60,31 +74,21 @@ export class Comment {
       </div>
     </div>`;
   }
-  generateHTMLAnswer(answerData: {
-    firstName: string;
-    lastName: string;
-    title: string;
-    img: string;
-    answer: string;
-    id: number;
-    month: number;
-    day: number;
-    hours: number;
-    minutes: number;
-  }): string {
+  generateHTMLAnswer(): string {
+ 
     return `<div class="answer">
           <div class="answer_avatar avatar">
-            <img src="${answerData.img}" alt="avatar" />
+            <img src="${this.answerIMG}" alt="avatar" />
           </div>
           <div class="answer_body">
             <div class="answer_body_header">
-              <h3 id="userTwo">${answerData.title} ${answerData.firstName} ${answerData.lastName}</h3>
+              <h3 id="userTwo">${this.answerTitle} ${this.answerFirstName} ${this.answerLastName}</h3>
               <img src="${share}" alt="share" />
               <span>${this.firstName} ${this.lastName}</span>
-              <span>${answerData.day}.${answerData.month} ${answerData.hours}.${answerData.minutes}</span>
+              <span>${this.answerDay}.${this.answerMount} ${this.answerHours}.${this.answerMinutes}</span>
             </div>
             <div class="answer_body_main">
-              ${answerData.answer}
+              ${this.answerText}
             </div>
             <div class="answer_body_footer">
               <div>

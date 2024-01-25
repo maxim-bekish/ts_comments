@@ -81,6 +81,8 @@ export class User {
         img: x.picture.large,
         data: this.getData(),
         like: 0,
+     
+        answerData: undefined
       }; // Создаем новый комментарий
 
       let comments: CommentData[] = CommentDataController.getComments(); // Получаем текущие комментарии
