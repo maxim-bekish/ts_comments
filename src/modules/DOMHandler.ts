@@ -31,12 +31,13 @@ export class DOMHandler {
   }
   static appendAnswer(wrapperComment: HTMLElement) {
  
-    const answer = document.createElement("div");
-    answer.className = "1";
-    answer.id = "1";
+    // const answer = document.createElement("div");
+    // answer.className = "1";
+    // answer.id = "111111111111111111111111";
+    // answer.setAttribute('datar',"11111111111");
 
 
-    wrapperComment.append(answer);
+    // wrapperComment.append(answer);
   }
   static counterLike(comments: CommentData[]): void {
     comments.forEach((element: any) => {

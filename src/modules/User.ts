@@ -26,13 +26,14 @@ export class User {
   async start(): Promise<void> {
     const userData = await this.fetchUserData();
     this.processUserData(userData);
-
     this.submits(userData);
     this.counterText();
     this.arrayComments = CommentDataController.getComments();
+    // debugger;
     this.renderComments();
     DOMHandler.counterLike(this.arrayComments);
     Answer.submit(this.arrayComments, userData);
+ 
   }
 
   async fetchUserData(): Promise<any> {
@@ -81,8 +82,8 @@ export class User {
         img: x.picture.large,
         data: this.getData(),
         like: 0,
-     
-        answerData: undefined
+
+        answerData: undefined,
       }; // Создаем новый комментарий
 
       let comments: CommentData[] = CommentDataController.getComments(); // Получаем текущие комментарии

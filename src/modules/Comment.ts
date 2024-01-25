@@ -37,7 +37,7 @@ export class Comment {
     this.like = data.like;
     if (answerData) {
       this.answerIMG = answerData.img;
-
+    
       this.answerFirstName = answerData.firstName;
       this.answerLastName = answerData.lastName;
       this.answerTitle = answerData.title;
