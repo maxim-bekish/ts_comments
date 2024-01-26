@@ -11,8 +11,8 @@
 Даные о юзере получаю с помощью api randomUser. 
 
 Инструменты:
-  -WebPack.
-  -TypeScript.
-  -Scss.
+  - WebPack.
+  - TypeScript.
+  - Scss.
  
 Работа пока не завершена.
