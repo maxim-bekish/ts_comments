@@ -1,5 +1,4 @@
 export interface CommentData {
-  answerData: any;
   firstName: string;
   lastName: string;
   value: string;
@@ -15,6 +14,7 @@ export interface CommentData {
   };
   answers?: AnswerData[];
   updateLikeComment?: (newLike: number) => void;
+  updateLikeAnswer?: (newLike: number) => void;
 }
 
 export interface AnswerData {

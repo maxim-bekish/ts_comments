@@ -1,4 +1,4 @@
-import { Answer } from './Answer';
+import { Answer } from "./Answer";
 import { AnswerData, CommentData } from "./types";
 import { CommentDataController } from "./CommentDataController";
 export class DOMHandler {
@@ -30,60 +30,30 @@ export class DOMHandler {
 
     main.append(allComments);
   }
-
   static appendAnswer(
     wrapperComment: HTMLElement,
     generateHTMLAnswer: string,
     answer: AnswerData
   ) {
-    console.log(3);
     const answerElement = document.createElement("div");
     answerElement.className = "answer";
     answerElement.id = `answerElement${answer}`;
-
     answerElement.innerHTML = generateHTMLAnswer;
     wrapperComment.append(answerElement);
-
-    // answer.innerHTML += generateHTMLAnswer;
   }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
   static counterLike(comments: CommentData[]): void {
-  
     comments.forEach((element: any) => {
-      let counterNumberComment = document.getElementById(
+      // Для реализации лайков на комментариях
+      const counterNumberComment = document.getElementById(
         `counterNumber${element.data.id}`
       );
-      let counterMinusComment = document.getElementById(
+      const counterMinusComment = document.getElementById(
         `counterMinus${element.data.id}`
       );
-      let counterPlusComment = document.getElementById(
+      const counterPlusComment = document.getElementById(
         `counterPlus${element.data.id}`
       );
-// Для реализации лайков на ответах
-          // let counterNumberAnswer = document.getElementById(
-          //   `counterNumber${element }`
-          // );
-          // let counterMinusAnswer = document.getElementById(
-          //   `counterMinus${element.data.id}`
-          // );
-          // let counterPlusAnswer = document.getElementById(
-          //   `counterPlus${element.data.id}`
-          // );
-
-
 
       counterNumberComment.innerHTML = `${element.like}`;
 
@@ -114,32 +84,54 @@ export class DOMHandler {
           commentInstance.updateLikeComment(element.like);
         }
       });
+
+      if (element.answers) {
+        element.answers.forEach((el: AnswerData) => {
+          // Для реализации лайков на ответах
+          let counterNumberAnswer = document.getElementById(
+            `counterNumber${el.id}`
+          );
+
+          let counterMinusAnswer = document.getElementById(
+            `counterMinus${el.id}`
+          );
+          let counterPlusAnswer = document.getElementById(
+            `counterPlus${el.id}`
+          );
+
+          counterMinusAnswer.addEventListener("click", function () {
+            el.like--;
+
+            counterNumberComment.innerHTML = `${el.like ? el.like : 0}`;
+            CommentDataController.updateComments(comments);
+
+
+
+
+
+
+
+            // разобраться тут
+
+
+
+
+
+
+            
+            // Обновление счетчика лайков в реальном времени
+            const commentInstance = comments.find(
+              (comment) => comment.data.id === element.data.id
+            );
+            if (commentInstance && commentInstance.updateLikeAnswer) {
+              commentInstance.updateLikeAnswer(element.like);
+            }
+          });
+          counterNumberAnswer.innerHTML = `${el.like}`;
+        });
+      }
     });
   }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
   static updateCounterText(counterText: HTMLElement, value: string): void {
     counterText.innerHTML = value;

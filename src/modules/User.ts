@@ -50,17 +50,17 @@ export class User {
     }
   }
   disabledButton(): string {
-    let x: string;
+    let text: string;
     if (
       this.textarea.value.split("").length <= 1000 &&
       this.textarea.value.split("").length > 0
     ) {
       this.submit.disabled = false;
-      x = this.textarea.value;
+      text = this.textarea.value;
     } else {
       this.submit.disabled = true;
     }
-    return x;
+    return text;
   }
   submits(userData: any): void {
     if (!this.submit || !this.main) return;
@@ -70,19 +70,16 @@ export class User {
     this.submit.addEventListener("click", async () => {
       DOMHandler.clearElement(this.allComments);
 
-      const x = userData.results[0]; // Загружаем данные пользователя
+      const data = userData.results[0]; // Загружаем данные пользователя
 
       const newPost: CommentData = {
-        firstName: x.name.first,
-        lastName: x.name.last,
+        firstName: data.name.first,
+        lastName: data.name.last,
         value: this.disabledButton(),
-
-        img: x.picture.large,
+        img: data.picture.large,
         data: this.getData(),
         like: 0,
-
-        answerData: undefined,
-      }; // Создаем новый комментарий
+      };
 
       let comments: CommentData[] = CommentDataController.getComments(); // Получаем текущие комментарии
 
@@ -177,15 +174,14 @@ export class User {
       // Добавляем текущий комментарий в DOM, используя DOMHandler.appendComment
       DOMHandler.appendComment(wrapperComment, commentHTML, element.data.id);
 
-  
       if (element.answers) {
         element.answers.forEach((answer: any) => {
-// id="answerElement1706283654745"
+          // id="answerElement1706283654745"
           const generateHTMLAnswer = new Comment(
             element,
             answer
           ).generateHTMLAnswer();
-          console.log(2);
+
           DOMHandler.appendAnswer(
             wrapperComment,
             generateHTMLAnswer,
