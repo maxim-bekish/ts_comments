@@ -9,6 +9,7 @@ export class Comment {
   private value: string;
   private img: string;
   private like: number;
+  private answerLike: number;
   private answerFirstName: string;
   private answerLastName: string;
   private answerTitle: string;
@@ -19,7 +20,7 @@ export class Comment {
   private answerDay: number;
   private answerHours: number;
   private answerMinutes: number;
-  data: {
+  date: {
     month: number;
     day: number;
     hours: number;
@@ -27,17 +28,17 @@ export class Comment {
     seconds: number;
     id: number;
   };
-  answers: Answer[];
+  aNSWER: Answer[];
   constructor(data: CommentData, answerData?: AnswerData) {
     this.firstName = data.firstName;
     this.lastName = data.lastName;
     this.value = data.value;
     this.img = data.img;
-    this.data = data.data;
+    this.date = data.data;
     this.like = data.like;
+
     if (answerData) {
       this.answerIMG = answerData.img;
-    
       this.answerFirstName = answerData.firstName;
       this.answerLastName = answerData.lastName;
       this.answerTitle = answerData.title;
@@ -46,48 +47,47 @@ export class Comment {
       this.answerMonth = answerData.month;
       this.answerDay = answerData.day;
       this.answerHours = answerData.hours;
-      this.answerMinutes = answerData.minutes;
+      this.answerLike = answerData.like;
     }
   }
 
   generateHTML(): string {
     // Генерация HTML для ответов
-
     return `
-    <div id="comment${this.data.id}"  class="comment">
+    <div id="comment${this.date.id}"  class="comment">
       <div class="comment_avatar avatar">
         <img src='${this.img}' alt="avatar" />
       </div>
       <div class="comment_body">
         <div class="comment_body_header">
           <h3>${this.firstName} ${this.lastName}</h3>
-          <span>${this.data.day}.${
-      this.data.month < 10 ? "0" + this.data.month : this.data.month
-    } - ${this.data.hours}:${this.data.minutes}</span>
+          <span>${this.date.day}.${
+      this.date.month < 10 ? "0" + this.date.month : this.date.month
+    } - ${this.date.hours}:${this.date.minutes}</span>
         </div>
         <div class="comment_body_main">
           ${this.value}
         </div>
         <div class="comment_body_footer">
-          <div id="answerButton${this.data.id}" >
+          <div id="answerButton${this.date.id}" >
             <img src="${answerButton}" />
             <span> Ответ</span>
           </div>
-          <div id="favorites${this.data.id}" >
+          <div id="favorites${this.date.id}" >
             <img src="${heart_2}" />
             <span>В избранном </span>
           </div>
           <div  class="counter">
-            <div id='counterMinus${this.data.id}' >-</div>
-            <div id='counterNumber${this.data.id}' >${this.like}</div>
-            <div id='counterPlus${this.data.id}' >+</div>
+            <div id='counterMinus${this.date.id}' >-</div>
+            <div id='counterNumber${this.date.id}' >${this.like}</div>
+            <div id='counterPlus${this.date.id}' >+</div>
           </div>
         </div>
       </div>
     </div>`;
   }
   generateHTMLAnswer(): string {
-    return `<div class="answer">
+    return `
           <div class="answer_avatar avatar">
             <img src="${this.answerIMG}" alt="avatar" />
           </div>
@@ -107,19 +107,31 @@ export class Comment {
                 <span> В Избранное </span>
               </div>
               <div class="counter">
-                <div>-</div>
-                <div>3</div>
-                <div>+</div>
+                <div id='counterMinus${this.answerID}' >-</div>
+                <div id='counterNumber${this.answerID}' >${this.answerLike}</div>
+                <div id='counterPlus${this.answerID}' >+</div>
               </div>
             </div>
           </div>
-        </div>`;
+     
+       `;
   }
-  updateLike(newLike: number): void {
+  updateLikeComment(newLike: number): void {
     this.like = newLike;
     // Обновите DOM-элемент для счетчика лайков
     const counterElement = document.getElementById(
-      `counterNumber${this.data.id}`
+      `counterNumber${this.date.id}`
+    );
+    if (counterElement) {
+      counterElement.innerHTML = `${newLike}`;
+    }
+  }
+
+  updateLikeAnswer(newLike: number): void {
+    this.like = newLike;
+    // Обновите DOM-элемент для счетчика лайков
+    const counterElement = document.getElementById(
+      `counterNumber${this.date.id}`
     );
     if (counterElement) {
       counterElement.innerHTML = `${newLike}`;

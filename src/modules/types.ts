@@ -14,7 +14,7 @@ export interface CommentData {
     id: number;
   };
   answers?: AnswerData[];
-  updateLike?: (newLike: number) => void;
+  updateLikeComment?: (newLike: number) => void;
 }
 
 export interface AnswerData {
@@ -28,4 +28,5 @@ export interface AnswerData {
   day?: number;
   hours?: number;
   minutes?: number;
+  like?: number;
 }

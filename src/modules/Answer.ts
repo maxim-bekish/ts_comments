@@ -1,6 +1,8 @@
-import { AnswerData, CommentData } from "./types";
+import { CommentData } from "./types";
 import { CommentDataController } from "./CommentDataController";
 import { Comment } from "./Comment";
+import { User } from "./User";
+import { DOMHandler } from "./DOMHandler";
 
 export class Answer {
   static submit(comments: CommentData[], userData: any): void {
@@ -10,7 +12,7 @@ export class Answer {
           `wrapperComment${element.data.id}`
         );
 
-        const answerWrapper = document.createElement("div");
+        // const answerWrapper = document.createElement("div");
 
         const input = document.createElement("input");
         const button = document.createElement("button");
@@ -22,11 +24,28 @@ export class Answer {
           this.handleButtonClick(
             element,
             input,
-            answerWrapper,
-
+            // answerWrapper,
             comments,
             userData
           );
+
+    const objComments = CommentDataController.getComments();
+    objComments.forEach((el) => {
+      if (el.answers) {
+   
+        el.answers.forEach((answer: any) => {
+          const dom = new Comment(el, answer).generateHTMLAnswer();
+          console.log();
+           if(!document.getElementById(`answerElement${answer.id}`)){
+          DOMHandler.appendAnswer(wrapperComment, dom, answer.id);}
+        });
+        // element.answers.forEach((el) => {
+        //   const dom = new Comment(element, el).generateHTMLAnswer();
+        //   answerWrapper.insertAdjacentHTML("beforeend", `${dom}`);
+        // });
+      }
+    });
+
           button.style.display = "none";
           input.style.display = "none";
         });
@@ -38,9 +57,8 @@ export class Answer {
               wrapperComment,
               element,
               input,
-              button,
-
-              answerWrapper
+              button
+              // answerWrapper
             );
           });
       });
@@ -52,7 +70,7 @@ export class Answer {
   private static handleButtonClick(
     element: CommentData,
     input: HTMLInputElement,
-    answerWrapper: HTMLDivElement,
+    // answerWrapper: HTMLDivElement,
     comments: CommentData[],
     userData: any
   ): void {
@@ -67,38 +85,49 @@ export class Answer {
       day: new Date().getDate(),
       hours: new Date().getHours(),
       minutes: new Date().getMinutes(),
+      like: 0,
     };
 
     // Добавляем новый ответ к текущим комментариям
     element.answers = element.answers || [];
     element.answers.push(answerData);
 
+    const updatedComments = comments.map((comment) => {
+      if (comment.data.id === element.data.id) {
+        return { ...comment, answers: element.answers };
+      }
+      return comment;
+    });
 
-    const updatedComments = this.updateCommentsWithAnswer(
-      comments,
-      element,
-      answerData
-    );
+    // const updatedComments = this.updateCommentsWithAnswer(
+    //   comments,
+    //   element,
+    //   answerData
+    // );
 
     CommentDataController.updateComments(updatedComments);
-
-
-    const dom = new Comment(element, answerData).generateHTMLAnswer();
-
-    answerWrapper.insertAdjacentHTML("beforeend", `${dom}`);
+    // answerWrapper.innerHTML = "";
   }
 
   private static handleAnswerButtonClick(
     wrapperComment: HTMLElement,
     element: CommentData,
     input: HTMLInputElement,
-    button: HTMLButtonElement,
-    answerWrapper: HTMLDivElement
+    button: HTMLButtonElement
+    // answerWrapper: HTMLDivElement
   ): void {
-    answerWrapper.id = `answerWrapper${new Date().getTime()}`;
-    wrapperComment.append(answerWrapper);
+    // Ошибка ----------------------------
+
+    // const dom = new Comment(element, el).generateHTMLAnswer();
+
+    // answerWrapper.className = "answer";
+    // wrapperComment.append(answerWrapper);
+
     wrapperComment.append(input);
     wrapperComment.append(button);
+    button.style.display = "block";
+    input.style.display = "block";
+    input.value = "";
   }
 
   private static updateCommentsWithAnswer(

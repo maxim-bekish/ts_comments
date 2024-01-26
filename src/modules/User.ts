@@ -29,11 +29,9 @@ export class User {
     this.submits(userData);
     this.counterText();
     this.arrayComments = CommentDataController.getComments();
-    // debugger;
     this.renderComments();
     DOMHandler.counterLike(this.arrayComments);
     Answer.submit(this.arrayComments, userData);
- 
   }
 
   async fetchUserData(): Promise<any> {
@@ -178,6 +176,23 @@ export class User {
 
       // Добавляем текущий комментарий в DOM, используя DOMHandler.appendComment
       DOMHandler.appendComment(wrapperComment, commentHTML, element.data.id);
+
+  
+      if (element.answers) {
+        element.answers.forEach((answer: any) => {
+// id="answerElement1706283654745"
+          const generateHTMLAnswer = new Comment(
+            element,
+            answer
+          ).generateHTMLAnswer();
+          console.log(2);
+          DOMHandler.appendAnswer(
+            wrapperComment,
+            generateHTMLAnswer,
+            answer.id
+          );
+        });
+      }
     });
 
     // Обновляем счетчик комментариев на странице
