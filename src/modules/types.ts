@@ -1,32 +1,51 @@
 export interface CommentData {
   firstName: string;
   lastName: string;
-  value: string;
+  title: string;
+  text: string;
   img: string;
+  id: string;
   like: number;
-  data?: {
-    month: number;
-    day: number;
-    hours: number;
-    minutes: number;
-    seconds: number;
-    id: number;
-  };
-  answers?: AnswerData[];
+  month: number;
+  day: number;
+  hours: number;
+  minutes: number;
+  favorites: boolean;
+
   updateLikeComment?: (newLike: number) => void;
-  updateLikeAnswer?: (newLike: number) => void;
 }
 
 export interface AnswerData {
-  firstName?: string;
-  lastName?: string;
-  title?: string;
-  img?: string;
-  answer?: string;
-  id?: number;
-  month?: number;
-  day?: number;
-  hours?: number;
-  minutes?: number;
-  like?: number;
+  firstName: string;
+  lastName: string;
+  title: string;
+  text: string;
+  img: string;
+  id: string;
+  infoComment: {
+    first: string;
+    last: string;
+    id: string;
+  };
+  like: number;
+  month: number;
+  day: number;
+  hours: number;
+  minutes: number;
+  favorites: boolean;
+
+  updateLikeAnswer?: (newLike: number) => void;
+}
+
+export interface UserData {
+  results: {
+    name: {
+      first: string;
+      last: string;
+      title: string;
+    };
+    picture: {
+      large: string;
+    };
+  }[];
 }

@@ -1,48 +1,49 @@
-import { CommentData } from "./types";
+import { CommentData, AnswerData, UserData } from "./types";
 import { CommentDataController } from "./CommentDataController";
-import { Comment } from "./Comment";
+import { GenerationHTMLElementsAnswer } from "./Comment";
 import { DOMHandler } from "./DOMHandler";
 
 export class Answer {
-  static submit(comments: CommentData[], userData: any): void {
+  static submit(userData: UserData): void {
     try {
-      comments.forEach((element) => {
+      // const dataAnswer = userData.results[0];
+      let dataComments = CommentDataController.getComments();
+      // ГОТОВО!!!!!!
+      dataComments.forEach((element) => {
+        // wrapperComment -  блок с комментами ответами и новым полем ввода
         const wrapperComment = document.getElementById(
-          `wrapperComment${element.data.id}`
+          `wrapperComment${element.id}`
         );
-        const input = document.createElement("input");
-        const button = document.createElement("button");
-        input.type = "text";
-        button.innerHTML = "submit";
-        button.addEventListener("click", () => {
-          this.handleButtonClick(element, input, comments, userData);
 
-          const objComments = CommentDataController.getComments();
-          objComments.forEach((el) => {
-            if (el.answers) {
-              el.answers.forEach((answer: any) => {
-                const dom = new Comment(el, answer).generateHTMLAnswer();
-                if (!document.getElementById(`answerElement${answer.id}`)) {
-                  DOMHandler.appendAnswer(wrapperComment, dom, answer.id);
-                }
-              });
-            }
-          });
-          button.style.display = "none";
-          input.style.display = "none";
-          
+        const inputAnswer = document.createElement("input");
+        const buttonAddAnswer = document.createElement("button"); //кнопка добавления комментария;
+        inputAnswer.type = "text";
+        buttonAddAnswer.innerHTML = "submit";
+
+        // buttonAnswer - кнопка "ответить"
+        const buttonAnswer = document.getElementById(
+          `answerButton${element.id}`
+        );
+
+        buttonAnswer.addEventListener("click", () => {
+          this.handleAnswerButtonClick(
+            wrapperComment,
+            inputAnswer,
+            buttonAddAnswer
+          );
         });
 
-        document
-          .getElementById(`answerButton${element.data.id}`)
-          .addEventListener("click", () => {
-            this.handleAnswerButtonClick(
-              wrapperComment,
-              element,
-              input,
-              button
-            );
-          });
+        buttonAddAnswer.addEventListener("click", () => {
+          this.handleButtonClick(
+            inputAnswer,
+            buttonAddAnswer,
+            wrapperComment,
+            element.id,
+            element.firstName,
+            element.lastName,
+            userData
+          );
+        });
       });
     } catch (error) {
       console.error("Ошибка при получении данных пользователя:", error);
@@ -50,50 +51,57 @@ export class Answer {
   }
 
   private static handleButtonClick(
-    element: CommentData,
-    input: HTMLInputElement,
-    comments: CommentData[],
-    userData: any
+    inputAnswer: HTMLInputElement,
+    buttonAddAnswer: HTMLButtonElement,
+    wrapperComment: HTMLElement,
+    idComment: string,
+    firstNameComment: string,
+    LastNameComment: string,
+    userData: UserData
   ): void {
-
     const answerData = {
       firstName: userData.results[0].name.first,
       lastName: userData.results[0].name.last,
       title: userData.results[0].name.title,
+      text: inputAnswer.value,
       img: userData.results[0].picture.large,
-      answer: input.value,
-      id: new Date().getTime(), // Use a unique identifier
+      id: crypto.randomUUID(), // Use a unique identifier
+      infoComment: {
+        first: firstNameComment,
+        last: LastNameComment,
+        id: idComment,
+      },
+      like: 0,
       month: new Date().getMonth() + 1,
       day: new Date().getDate(),
       hours: new Date().getHours(),
       minutes: new Date().getMinutes(),
-      like: 0,
+      favorites: false,
     };
-    // Добавляем новый ответ к текущим комментариям
-    element.answers = element.answers || [];
-    element.answers.push(answerData);
-    const updatedComments = comments.map((comment) => {
-      if (comment.data.id === element.data.id) {
-        return { ...comment, answers: element.answers };
-      }
-      return comment;
-    });
-    CommentDataController.updateComments(updatedComments);
-    // console.log(updatedComments);
-// DOMHandler.counterLike(updatedComments);
 
+    const arrayAnswer = CommentDataController.getAnswer();
+    arrayAnswer.push(answerData);
+    CommentDataController.updateAnswer(arrayAnswer);
+    buttonAddAnswer.style.display = "none";
+    inputAnswer.style.display = "none";
+
+    arrayAnswer.forEach((answer: any) => {
+      const dom = new GenerationHTMLElementsAnswer(answer).generateHTMLAnswer();
+      if (!document.getElementById(`answerElement${answer.id}`)) {
+        DOMHandler.appendAnswer(wrapperComment, dom, answer.id);
+      }
+    });
   }
 
   private static handleAnswerButtonClick(
     wrapperComment: HTMLElement,
-    _element: CommentData,
-    input: HTMLInputElement,
-    button: HTMLButtonElement
+    inputAnswer: HTMLInputElement,
+    buttonAddAnswer: HTMLButtonElement
   ): void {
-    wrapperComment.append(input);
-    wrapperComment.append(button);
-    button.style.display = "block";
-    input.style.display = "block";
-    input.value = "";
+    wrapperComment.append(inputAnswer);
+    wrapperComment.append(buttonAddAnswer);
+    buttonAddAnswer.style.display = "block";
+    inputAnswer.style.display = "block";
+    inputAnswer.value = "";
   }
 }

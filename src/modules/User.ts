@@ -1,14 +1,19 @@
 import { CommentDataController } from "./CommentDataController";
 import { DOMHandler } from "./DOMHandler";
 import { UserDataFetcher } from "./UserDataFetcher";
-import { CommentData } from "./types";
-import { Comment } from "./Comment";
+import { CommentData, AnswerData } from "./types";
+import {
+  GenerationHTMLElementsAnswer,
+  GenerationHTMLElementsComments,
+} from "./Comment";
 import { Answer } from "./Answer";
 
 export class User {
   private userOne: HTMLElement | null;
   private submit: HTMLButtonElement;
   private arrayComments: CommentData[];
+  private arrayAnswer: AnswerData[];
+
   private textarea: HTMLTextAreaElement;
   private allComments: HTMLDivElement | null;
   private main: HTMLElement | null;
@@ -17,6 +22,7 @@ export class User {
     this.userOne = document.getElementById("user");
     this.submit = document.getElementById("submit") as HTMLButtonElement;
     this.arrayComments = [];
+    this.arrayAnswer = [];
     this.allComments = document.createElement("div");
     this.allComments.id = "allComments";
     this.textarea = document.getElementById("textarea") as HTMLTextAreaElement;
@@ -29,9 +35,13 @@ export class User {
     this.submits(userData);
     this.counterText();
     this.arrayComments = CommentDataController.getComments();
+    this.arrayAnswer = CommentDataController.getAnswer();
+
     this.renderComments();
+    this.renderAnswer();
     DOMHandler.counterLike(this.arrayComments);
-    Answer.submit(this.arrayComments, userData);
+    DOMHandler.counterLikeAnswer(this.arrayAnswer);
+    Answer.submit(userData);
   }
 
   async fetchUserData(): Promise<any> {
@@ -75,10 +85,16 @@ export class User {
       const newPost: CommentData = {
         firstName: data.name.first,
         lastName: data.name.last,
-        value: this.disabledButton(),
+        title: data.name.title,
         img: data.picture.large,
-        data: this.getData(),
         like: 0,
+        favorites: false,
+        text: this.disabledButton(),
+        month: new Date().getMonth() + 1,
+        day: new Date().getDate(),
+        hours: new Date().getHours(),
+        minutes: new Date().getMinutes(),
+        id: crypto.randomUUID(),
       };
 
       let comments: CommentData[] = CommentDataController.getComments(); // Получаем текущие комментарии
@@ -96,6 +112,7 @@ export class User {
 
       this.arrayComments = comments; // Перерисовываем комментарии
       this.renderComments();
+      // this.renderAnswer();
 
       DOMHandler.counterLike(this.arrayComments);
     });
@@ -106,23 +123,19 @@ export class User {
     day: number;
     hours: number;
     minutes: number;
-    seconds: number;
-    id: number;
+    id: string;
   } {
     const currentDateAndTime = new Date();
     const month = currentDateAndTime.getMonth() + 1;
     const day = currentDateAndTime.getDate();
     const hours = currentDateAndTime.getHours();
     const minutes = currentDateAndTime.getMinutes();
-    const seconds = currentDateAndTime.getSeconds();
-    const id = currentDateAndTime.getTime();
-
+    const id = crypto.randomUUID();
     return {
       month,
       day,
       hours,
       minutes,
-      seconds,
       id,
     };
   }
@@ -163,35 +176,54 @@ export class User {
     this.arrayComments.forEach((element) => {
       // Генерируем HTML-код для текущего комментария
 
-      const commentHTML = new Comment(element).generateHTML();
+      const commentHTML = new GenerationHTMLElementsComments(
+        element
+      ).generateHTML();
 
       const wrapperComment = document.createElement("div");
       wrapperComment.className = "commentForm";
-      wrapperComment.id = `wrapperComment-${element.data.id}`;
+      wrapperComment.id = `wrapperComment${element.id}`;
       this.allComments?.append(wrapperComment);
       // Генерируем HTML-код для текущего ответа
 
       // Добавляем текущий комментарий в DOM, используя DOMHandler.appendComment
-      DOMHandler.appendComment(wrapperComment, commentHTML, element.data.id);
+      DOMHandler.appendComment(wrapperComment, commentHTML, element.id);
+      // НУЖНО РЕШИТЬ
+      // if (element.answers) {
+      //   element.answers.forEach((answer: any) => {
+      //     // id="answerElement1706283654745"
+      //     const generateHTMLAnswer = new Comment(
+      //       element,
+      //       answer
+      //     ).generateHTMLAnswer();
 
-      if (element.answers) {
-        element.answers.forEach((answer: any) => {
-          // id="answerElement1706283654745"
-          const generateHTMLAnswer = new Comment(
-            element,
-            answer
-          ).generateHTMLAnswer();
-
-          DOMHandler.appendAnswer(
-            wrapperComment,
-            generateHTMLAnswer,
-            answer.id
-          );
-        });
-      }
+      //     DOMHandler.appendAnswer(
+      //       wrapperComment,
+      //       generateHTMLAnswer,
+      //       answer.id
+      //     );
+      //   });
+      // }
     });
 
     // Обновляем счетчик комментариев на странице
     DOMHandler.countComments();
+  }
+
+  renderAnswer(): void {
+    const arrayAnswer = CommentDataController.getAnswer();
+    arrayAnswer.forEach((answer: AnswerData) => {
+      const wrapperComment = document.getElementById(
+        `wrapperComment${answer.infoComment.id}`
+      );
+      const generateHTMLAnswer = new GenerationHTMLElementsAnswer(
+        answer
+      ).generateHTMLAnswer();
+
+      DOMHandler.appendAnswer(wrapperComment, generateHTMLAnswer, answer.id);
+    });
+    //
+
+    // DOMHandler.appendAnswer(wrapperComment, dom, answer.id);
   }
 }

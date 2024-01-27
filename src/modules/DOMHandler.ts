@@ -15,7 +15,7 @@ export class DOMHandler {
   static appendComment(
     wrapperComment: HTMLElement,
     commentHTML: string,
-    id: number
+    id: string
   ): void {
     const main = document.getElementById("main");
     const allComments = document.getElementById("allComments");
@@ -23,6 +23,7 @@ export class DOMHandler {
     wrapperComment.id = `wrapperComment${id}`;
 
     // Заполняем созданный элемент HTML-кодом комментария
+
     wrapperComment.innerHTML = commentHTML;
 
     main.append(allComments);
@@ -30,7 +31,7 @@ export class DOMHandler {
   static appendAnswer(
     wrapperComment: HTMLElement,
     generateHTMLAnswer: string,
-    answer: AnswerData
+    answer: string
   ) {
     const answerElement = document.createElement("div");
     answerElement.className = "answer";
@@ -56,16 +57,14 @@ export class DOMHandler {
     comments.forEach((element: any) => {
       // Для реализации лайков на комментариях
       const counterNumberComment = document.getElementById(
-        `counterNumber${element.data.id}`
+        `counterNumber${element.id}`
       );
       const counterMinusComment = document.getElementById(
-        `counterMinus${element.data.id}`
+        `counterMinus${element.id}`
       );
       const counterPlusComment = document.getElementById(
-        `counterPlus${element.data.id}`
+        `counterPlus${element.id}`
       );
-
-      counterNumberComment.innerHTML = `${element.like}`;
 
       counterMinusComment.addEventListener("click", function () {
         element.like--;
@@ -74,7 +73,7 @@ export class DOMHandler {
         CommentDataController.updateComments(comments);
         // Обновление счетчика лайков в реальном времени
         const commentInstance = comments.find(
-          (comment) => comment.data.id === element.data.id
+          (comment) => comment.id === element.id
         );
         if (commentInstance && commentInstance.updateLikeComment) {
           commentInstance.updateLikeComment(element.like);
@@ -88,57 +87,49 @@ export class DOMHandler {
         CommentDataController.updateComments(comments);
         // Обновление счетчика лайков в реальном времени
         const commentInstance = comments.find(
-          (comment) => comment.data.id === element.data.id
+          (comment) => comment.id === element.id
         );
         if (commentInstance && commentInstance.updateLikeComment) {
           commentInstance.updateLikeComment(element.like);
         }
       });
+    });
+  }
 
-      if (element.answers) {
-        element.answers.forEach((el: AnswerData) => {
-          // Для реализации лайков на ответах
-          let counterNumberAnswer = document.getElementById(
-            `counterNumber${el.id}`
-          );
+  static counterLikeAnswer(answers: AnswerData[]): void {
 
-          let counterMinusAnswer = document.getElementById(
-            `counterMinus${el.id}`
-          );
-          let counterPlusAnswer = document.getElementById(
-            `counterPlus${el.id}`
-          );
-
-          counterMinusAnswer.addEventListener("click", function () {
-            el.like--;
-
-            counterNumberAnswer.innerHTML = `${el.like ? el.like : 0}`;
-            CommentDataController.updateComments(comments);
-
-            // Обновление счетчика лайков в реальном времени
-            const commentInstance = comments.find(
-              (comment) => comment.data.id === element.data.id
-            );
-            if (commentInstance && commentInstance.updateLikeAnswer) {
-              commentInstance.updateLikeAnswer(element.like);
-            }
-          });
-          counterPlusAnswer.addEventListener("click", function () {
-            el.like++;
-
-            counterNumberAnswer.innerHTML = `${el.like ? el.like : 0}`;
-            CommentDataController.updateComments(comments);
-
-            // Обновление счетчика лайков в реальном времени
-            const commentInstance = comments.find(
-              (comment) => comment.data.id === element.data.id
-            );
-            if (commentInstance && commentInstance.updateLikeAnswer) {
-              commentInstance.updateLikeAnswer(element.like);
-            }
-          });
-        });
-      }
+    answers.forEach((el: AnswerData) => {
+      // Для реализации лайков на ответах
+      let counterNumberAnswer = document.getElementById(
+        `counterNumber${el.id}`
+      );
+      let counterMinusAnswer = document.getElementById(`counterMinus${el.id}`);
+      let counterPlusAnswer = document.getElementById(`counterPlus${el.id}`);
+      counterMinusAnswer.addEventListener("click", function () {
+        el.like--;
+        console.log(counterNumberAnswer);
+        // counterNumberAnswer.innerHTML = `${el.like ? el.like : 0}`;
+        // CommentDataController.updateComments(comments);
+        // // Обновление счетчика лайков в реальном времени
+        // const commentInstance = comments.find(
+        //   (comment) => comment.data.id === element.data.id
+        // );
+        // if (commentInstance && commentInstance.updateLikeAnswer) {
+        //   commentInstance.updateLikeAnswer(element.like);
+        // }
+      });
+      // counterPlusAnswer.addEventListener("click", function () {
+      //   el.like++;
+      //   counterNumberAnswer.innerHTML = `${el.like ? el.like : 0}`;
+      //   CommentDataController.updateComments(comments);
+      //   // Обновление счетчика лайков в реальном времени
+      //   const commentInstance = comments.find(
+      //     (comment) => comment.data.id === element.data.id
+      //   );
+      //   if (commentInstance && commentInstance.updateLikeAnswer) {
+      //     commentInstance.updateLikeAnswer(element.like);
+      //   }
+      // });
     });
   }
 
