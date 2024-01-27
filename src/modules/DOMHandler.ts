@@ -4,9 +4,6 @@ import { CommentDataController } from "./CommentDataController";
 export class DOMHandler {
   static clearElement(element: HTMLElement): void {
     element.innerHTML = "";
-    // while (element?.firstChild) {
-    //   element.removeChild(element.firstChild);
-    // }
   }
   static countComments() {
     const commentCount =
@@ -39,6 +36,19 @@ export class DOMHandler {
     answerElement.className = "answer";
     answerElement.id = `answerElement${answer}`;
     answerElement.innerHTML = generateHTMLAnswer;
+
+    //  Добавляем обработчики событий для лайков на новый ответ
+
+    // const counterMinusAnswer = answerElement.querySelector(
+    //   `#counterMinus${answer}`
+    // );
+    // const counterPlusAnswer = answerElement.querySelector(
+    //   `#counterPlus${answer}`
+    // );
+    // const counterNumberAnswer = answerElement.querySelector(
+    //   `#counterNumber${answer}`
+    // );
+
     wrapperComment.append(answerElement);
   }
 
@@ -102,23 +112,9 @@ export class DOMHandler {
           counterMinusAnswer.addEventListener("click", function () {
             el.like--;
 
-            counterNumberComment.innerHTML = `${el.like ? el.like : 0}`;
+            counterNumberAnswer.innerHTML = `${el.like ? el.like : 0}`;
             CommentDataController.updateComments(comments);
 
-
-
-
-
-
-
-            // разобраться тут
-
-
-
-
-
-
-            
             // Обновление счетчика лайков в реальном времени
             const commentInstance = comments.find(
               (comment) => comment.data.id === element.data.id
@@ -127,7 +123,20 @@ export class DOMHandler {
               commentInstance.updateLikeAnswer(element.like);
             }
           });
-          counterNumberAnswer.innerHTML = `${el.like}`;
+          counterPlusAnswer.addEventListener("click", function () {
+            el.like++;
+
+            counterNumberAnswer.innerHTML = `${el.like ? el.like : 0}`;
+            CommentDataController.updateComments(comments);
+
+            // Обновление счетчика лайков в реальном времени
+            const commentInstance = comments.find(
+              (comment) => comment.data.id === element.data.id
+            );
+            if (commentInstance && commentInstance.updateLikeAnswer) {
+              commentInstance.updateLikeAnswer(element.like);
+            }
+          });
         });
       }
     });

@@ -30,6 +30,7 @@ export class Answer {
           });
           button.style.display = "none";
           input.style.display = "none";
+          
         });
 
         document
@@ -54,6 +55,7 @@ export class Answer {
     comments: CommentData[],
     userData: any
   ): void {
+
     const answerData = {
       firstName: userData.results[0].name.first,
       lastName: userData.results[0].name.last,
@@ -77,11 +79,14 @@ export class Answer {
       return comment;
     });
     CommentDataController.updateComments(updatedComments);
+    // console.log(updatedComments);
+// DOMHandler.counterLike(updatedComments);
+
   }
 
   private static handleAnswerButtonClick(
     wrapperComment: HTMLElement,
-    element: CommentData,
+    _element: CommentData,
     input: HTMLInputElement,
     button: HTMLButtonElement
   ): void {
