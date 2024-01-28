@@ -1,3 +1,5 @@
+import { CommentDataController } from "./CommentDataController";
+
 export class CustomSelect {
   private customSelect: HTMLDivElement;
   private selectedOption: HTMLSpanElement;
@@ -25,7 +27,10 @@ export class CustomSelect {
 
     this.optionsList.addEventListener("click", (event) => {
       const target = event.target as HTMLLIElement;
+
       if (target.tagName === "LI") {
+        CommentDataController.updateFilter(target.attributes[0].value);
+
         this.selectedOption.textContent = target.textContent || ""; // Скрываем список после выбора опции
       }
     });

@@ -120,4 +120,15 @@ export class DOMHandler {
   static updateCounterText(counterText: HTMLElement, value: string): void {
     counterText.innerHTML = value;
   }
+  static filter(filter: string): void {
+    const optionsList = document.getElementById(
+      `${filter}`
+    ) as HTMLUListElement;
+    const option = document.querySelector(".selected-option");
+    if (filter) {
+      option.innerHTML = optionsList.textContent;
+    } else {
+      option.innerHTML = "По дате";
+    }
+  }
 }

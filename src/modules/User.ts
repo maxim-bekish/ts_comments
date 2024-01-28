@@ -7,6 +7,7 @@ import {
   GenerationHTMLElementsComments,
 } from "./Comment";
 import { Answer } from "./Answer";
+import { CustomSelect } from "./Filter";
 
 export class User {
   private userOne: HTMLElement | null;
@@ -30,13 +31,16 @@ export class User {
   }
 
   async start(): Promise<void> {
+    new CustomSelect();
+    //  CommentDataController.updateFilter("option1");
+
     const userData = await this.fetchUserData();
     this.processUserData(userData);
     this.submits(userData);
     this.counterText();
     this.arrayComments = CommentDataController.getComments();
     this.arrayAnswer = CommentDataController.getAnswer();
-
+    this.renderFilter();
     this.renderComments();
     this.renderAnswer();
     DOMHandler.counterLike(this.arrayComments);
@@ -225,5 +229,9 @@ export class User {
     //
 
     // DOMHandler.appendAnswer(wrapperComment, dom, answer.id);
+  }
+  renderFilter(): void {
+    const filter = CommentDataController.getFilter();
+    DOMHandler.filter(filter);
   }
 }
