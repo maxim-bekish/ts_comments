@@ -97,7 +97,6 @@ export class DOMHandler {
   }
 
   static counterLikeAnswer(answers: AnswerData[]): void {
-
     answers.forEach((el: AnswerData) => {
       // Для реализации лайков на ответах
       let counterNumberAnswer = document.getElementById(
@@ -107,29 +106,14 @@ export class DOMHandler {
       let counterPlusAnswer = document.getElementById(`counterPlus${el.id}`);
       counterMinusAnswer.addEventListener("click", function () {
         el.like--;
-        console.log(counterNumberAnswer);
-        // counterNumberAnswer.innerHTML = `${el.like ? el.like : 0}`;
-        // CommentDataController.updateComments(comments);
-        // // Обновление счетчика лайков в реальном времени
-        // const commentInstance = comments.find(
-        //   (comment) => comment.data.id === element.data.id
-        // );
-        // if (commentInstance && commentInstance.updateLikeAnswer) {
-        //   commentInstance.updateLikeAnswer(element.like);
-        // }
+        counterNumberAnswer.innerHTML = `${el.like ? el.like : 0}`;
+        CommentDataController.updateAnswer(answers);
       });
-      // counterPlusAnswer.addEventListener("click", function () {
-      //   el.like++;
-      //   counterNumberAnswer.innerHTML = `${el.like ? el.like : 0}`;
-      //   CommentDataController.updateComments(comments);
-      //   // Обновление счетчика лайков в реальном времени
-      //   const commentInstance = comments.find(
-      //     (comment) => comment.data.id === element.data.id
-      //   );
-      //   if (commentInstance && commentInstance.updateLikeAnswer) {
-      //     commentInstance.updateLikeAnswer(element.like);
-      //   }
-      // });
+      counterPlusAnswer.addEventListener("click", function () {
+        el.like++;
+        counterNumberAnswer.innerHTML = `${el.like ? el.like : 0}`;
+        CommentDataController.updateAnswer(answers);
+      });
     });
   }
 

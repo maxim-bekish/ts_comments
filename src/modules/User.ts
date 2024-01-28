@@ -112,7 +112,7 @@ export class User {
 
       this.arrayComments = comments; // Перерисовываем комментарии
       this.renderComments();
-      // this.renderAnswer();
+      this.renderAnswer();
 
       DOMHandler.counterLike(this.arrayComments);
     });
