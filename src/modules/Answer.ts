@@ -6,9 +6,9 @@ import { DOMHandler } from "./DOMHandler";
 export class Answer {
   static submit(userData: UserData): void {
     try {
-      // const dataAnswer = userData.results[0];
+
       let dataComments = CommentDataController.getComments();
-      // ГОТОВО!!!!!!
+
       dataComments.forEach((element) => {
         // wrapperComment -  блок с комментами ответами и новым полем ввода
         const wrapperComment = document.getElementById(
@@ -24,6 +24,7 @@ export class Answer {
         const buttonAnswer = document.getElementById(
           `answerButton${element.id}`
         );
+       
 
         buttonAnswer.addEventListener("click", () => {
           this.handleAnswerButtonClick(
@@ -44,6 +45,7 @@ export class Answer {
             userData
           );
         });
+
       });
     } catch (error) {
       console.error("Ошибка при получении данных пользователя:", error);

@@ -1,12 +1,12 @@
 import "./sass/_style.scss";
 import "./sass/_all.scss";
 
-import { User } from "./modules/User";
+import { App } from "./modules/App";
 // import { CustomSelect } from "./modules/Filter";
 
-// document.addEventListener("DOMContentLoaded", () => {
+// document.("DOMContentLoaded", () => {
 //   new CustomSelect();
 // });
 
-const user = new User();
-user.start();
+const app = new App();
+app.start();

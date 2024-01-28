@@ -1,4 +1,3 @@
-import { Answer } from "./Answer";
 import { AnswerData, CommentData } from "./types";
 import { CommentDataController } from "./CommentDataController";
 export class DOMHandler {
@@ -130,5 +129,8 @@ export class DOMHandler {
     } else {
       option.innerHTML = "По дате";
     }
+  }
+  static favorites():void{
+
   }
 }

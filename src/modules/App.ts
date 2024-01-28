@@ -9,7 +9,7 @@ import {
 import { Answer } from "./Answer";
 import { CustomSelect } from "./Filter";
 
-export class User {
+export class App {
   private userOne: HTMLElement | null;
   private submit: HTMLButtonElement;
   private arrayComments: CommentData[];
@@ -43,6 +43,7 @@ export class User {
     this.renderFilter();
     this.renderComments();
     this.renderAnswer();
+    this.renderFavorites();
     DOMHandler.counterLike(this.arrayComments);
     DOMHandler.counterLikeAnswer(this.arrayAnswer);
     Answer.submit(userData);
@@ -213,7 +214,6 @@ export class User {
     // Обновляем счетчик комментариев на странице
     DOMHandler.countComments();
   }
-
   renderAnswer(): void {
     const arrayAnswer = CommentDataController.getAnswer();
     arrayAnswer.forEach((answer: AnswerData) => {
@@ -233,5 +233,22 @@ export class User {
   renderFilter(): void {
     const filter = CommentDataController.getFilter();
     DOMHandler.filter(filter);
+  }
+  renderFavorites(): void {
+    this.arrayComments.forEach((element) => {
+      document
+        .getElementById(`favorites${element.id}`)
+        .addEventListener("click", (el) => {
+          element.favorites
+            ? (element.favorites = false)
+            : (element.favorites = true);
+          CommentDataController.updateComments(this.arrayComments);
+          const x = el.currentTarget as HTMLElement;
+          x.querySelector("span").innerHTML = `${
+            element.favorites ? "Удалить из избранного" : "Добавить в избранное"
+          }`;
+          console.log(element);
+        });
+    });
   }
 }
