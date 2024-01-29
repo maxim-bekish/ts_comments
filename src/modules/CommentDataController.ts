@@ -15,7 +15,7 @@ export class CommentDataController {
 
   static updateComments(comments: CommentData[]): void {
 
-    console.log(comments);
+
     localStorage.setItem("comments", JSON.stringify(comments));
 
   }

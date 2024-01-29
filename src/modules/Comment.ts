@@ -33,7 +33,7 @@ export class GenerationHTMLElementsComments {
 
   generateHTML(): string {
     // Генерация HTML для ответов
-    // console.log('generateHTML',this);
+
     return `
     <div id="comment${this.id}"  class="comment">
       <div class="comment_avatar avatar">

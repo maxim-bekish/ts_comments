@@ -94,14 +94,14 @@ export class DOMHandler {
   }
 
   static counterLikeAnswer(element: CommentData[]): void {
-    // console.log(element);
+   
     // Для реализации лайков на ответах
     element.forEach((elementTwo) => {
-      // console.log(el);
+
       // debugger;
-      console.log("123", elementTwo);
+
       elementTwo.answer.forEach((el) => {
-        console.log('123',el)
+
         let counterNumberAnswer = document.getElementById(
           `counterNumber${el.id}`
         );
@@ -141,5 +141,5 @@ export class DOMHandler {
       option.innerHTML = "По дате";
     }
   }
-  static favorites(): void {}
+
 }

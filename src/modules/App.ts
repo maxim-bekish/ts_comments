@@ -8,7 +8,7 @@ import {
 } from "./Comment";
 import { Answer } from "./Answer";
 import { CustomSelect } from "./Filter";
-// import { Favorites } from "./Favorites";
+import { Favorites } from "./Favorites";
 
 export class App {
   private userOne: HTMLElement | null;
@@ -38,14 +38,13 @@ export class App {
     this.processUserData(userData);
     this.submits(userData);
     this.counterText();
-    // Favorites.favorites();
+    Favorites.favorites();
     this.arrayComments = CommentDataController.getComments();
 
     this.renderComments(this.arrayComments);
     // this.renderAnswer();
     this.renderFavorites();
     this.renderFilter();
-
 
     Answer.submit(userData);
   }
@@ -119,7 +118,7 @@ export class App {
 
       this.arrayComments = comments; // Перерисовываем комментарии
       this.renderComments(this.arrayComments);
-  
+
       this.renderFavorites();
     });
   }
@@ -190,10 +189,9 @@ export class App {
       // Добавляем текущий комментарий в DOM, используя DOMHandler.appendComment
       DOMHandler.appendComment(wrapperComment, commentHTML);
       this.renderAnswer(wrapperComment, element);
-    
     });
     DOMHandler.counterLike(arrayComments); // Обновляем значение лайков комментариев
-  DOMHandler.counterLikeAnswer(arrayComments);
+    DOMHandler.counterLikeAnswer(arrayComments);
     DOMHandler.countComments(); // Обновляем счетчик комментариев на странице
   }
 
@@ -205,7 +203,7 @@ export class App {
 
   renderFavorites(): void {
     // Очищаем область отображения комментариев перед добавлением новых
-    this.allComments.innerHTML = "";
+    // this.allComments.innerHTML = "";
 
     // Получаем только избранные комментарии
     const favoriteComments = this.arrayComments.filter(
