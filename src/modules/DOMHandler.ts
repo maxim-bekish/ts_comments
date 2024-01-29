@@ -60,8 +60,10 @@ export class DOMHandler {
       const counterPlusComment = document.getElementById(
         `counterPlus${element.id}`
       );
-      if (counterMinusComment != null) {
+      // if (counterMinusComment != null) {
         counterMinusComment.addEventListener("click", function () {
+
+          // debugger
           element.like--;
 
           counterNumberComment.innerHTML = `${element.like ? element.like : 0}`;
@@ -74,8 +76,8 @@ export class DOMHandler {
             commentInstance.updateLikeComment(element.like);
           }
         });
-      }
-      if (counterPlusComment != null) {
+      // }
+      // if (counterPlusComment != null) {
         counterPlusComment.addEventListener("click", function () {
           element.like++;
 
@@ -89,7 +91,7 @@ export class DOMHandler {
             commentInstance.updateLikeComment(element.like);
           }
         });
-      }
+      // }
     });
   }
 

@@ -225,9 +225,9 @@ export class App {
     // DOMHandler.countComments();
 
     // После отображения избранных комментариев вызываем метод для отображения остальных комментариев
-    this.renderComments(
-      this.arrayComments.filter((comment) => !comment.favorites)
-    );
+    // this.renderComments(
+    //   this.arrayComments.filter((comment) => !comment.favorites)
+    // );
   }
 
   renderFilter(): void {
