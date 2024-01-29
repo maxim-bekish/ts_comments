@@ -6,7 +6,6 @@ import { DOMHandler } from "./DOMHandler";
 export class Answer {
   static submit(userData: UserData): void {
     try {
-
       let dataComments = CommentDataController.getComments();
 
       dataComments.forEach((element) => {
@@ -24,7 +23,6 @@ export class Answer {
         const buttonAnswer = document.getElementById(
           `answerButton${element.id}`
         );
-       
 
         buttonAnswer.addEventListener("click", () => {
           this.handleAnswerButtonClick(
@@ -39,13 +37,10 @@ export class Answer {
             inputAnswer,
             buttonAddAnswer,
             wrapperComment,
-            element.id,
-            element.firstName,
-            element.lastName,
-            userData
+            userData,
+            element.id
           );
         });
-
       });
     } catch (error) {
       console.error("Ошибка при получении данных пользователя:", error);
@@ -53,13 +48,11 @@ export class Answer {
   }
 
   private static handleButtonClick(
-    inputAnswer: HTMLInputElement,
-    buttonAddAnswer: HTMLButtonElement,
-    wrapperComment: HTMLElement,
-    idComment: string,
-    firstNameComment: string,
-    LastNameComment: string,
-    userData: UserData
+    inputAnswer: HTMLInputElement, // элемент input
+    buttonAddAnswer: HTMLButtonElement, // элемент button
+    wrapperComment: HTMLElement, // элемент div куда вставить ответ
+    userData: UserData, // данные юзера который отвечает
+    id: string // id нужного объекта в массиве
   ): void {
     const answerData = {
       firstName: userData.results[0].name.first,
@@ -68,11 +61,7 @@ export class Answer {
       text: inputAnswer.value,
       img: userData.results[0].picture.large,
       id: crypto.randomUUID(), // Use a unique identifier
-      infoComment: {
-        first: firstNameComment,
-        last: LastNameComment,
-        id: idComment,
-      },
+      idComment: id,
       like: 0,
       month: new Date().getMonth() + 1,
       day: new Date().getDate(),
@@ -80,21 +69,19 @@ export class Answer {
       minutes: new Date().getMinutes(),
       favorites: false,
     };
-
-    const arrayAnswer = CommentDataController.getAnswer();
-    arrayAnswer.push(answerData);
-    CommentDataController.updateAnswer(arrayAnswer);
-    buttonAddAnswer.style.display = "none";
-    inputAnswer.style.display = "none";
-
-    arrayAnswer.forEach((answer: any) => {
-      const dom = new GenerationHTMLElementsAnswer(answer).generateHTMLAnswer();
-      if (!document.getElementById(`answerElement${answer.id}`)) {
-        DOMHandler.appendAnswer(wrapperComment, dom, answer.id);
+    const arrayAnswer = CommentDataController.getComments();
+    arrayAnswer.map((element) => {
+      if (id === element.id) {
+        element.answer.push(answerData);
+        CommentDataController.updateComments(arrayAnswer);
+        DOMHandler.appendAnswer(wrapperComment, answerData, element);
       }
     });
+    buttonAddAnswer.style.display = "none";
+    inputAnswer.style.display = "none";
   }
 
+  // Добавляет форму ввода ответа
   private static handleAnswerButtonClick(
     wrapperComment: HTMLElement,
     inputAnswer: HTMLInputElement,

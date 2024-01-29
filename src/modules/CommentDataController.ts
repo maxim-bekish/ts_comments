@@ -9,17 +9,25 @@ export class CommentDataController {
     return answer;
   }
   static getFilter(): string {
-    const filter = JSON.parse(localStorage.getItem("filter"));
+    const filter = localStorage.getItem("option");
     return filter;
   }
 
   static updateComments(comments: CommentData[]): void {
+
+    console.log(comments);
     localStorage.setItem("comments", JSON.stringify(comments));
+
   }
-  static updateAnswer(answer: AnswerData[]): void {
-    localStorage.setItem("answer", JSON.stringify(answer));
-  }
+  // static updateAnswer(answer: AnswerData[]): void {
+  //   const x = JSON.parse(localStorage.getItem("comments"));
+  //   x.forEach((el: CommentData) => {
+
+      
+  //   });
+  //   localStorage.setItem("answer", JSON.stringify(answer));
+  // }
   static updateFilter(option: string): void {
-    localStorage.setItem("filter", JSON.stringify(option));
+    localStorage.setItem("filter", option);
   }
 }

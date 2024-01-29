@@ -8,22 +8,23 @@ import {
 } from "./Comment";
 import { Answer } from "./Answer";
 import { CustomSelect } from "./Filter";
+// import { Favorites } from "./Favorites";
 
 export class App {
   private userOne: HTMLElement | null;
   private submit: HTMLButtonElement;
   private arrayComments: CommentData[];
   private arrayAnswer: AnswerData[];
-
   private textarea: HTMLTextAreaElement;
   private allComments: HTMLDivElement | null;
   private main: HTMLElement | null;
+  static renderComments: any;
 
   constructor() {
     this.userOne = document.getElementById("user");
     this.submit = document.getElementById("submit") as HTMLButtonElement;
     this.arrayComments = [];
-    this.arrayAnswer = [];
+
     this.allComments = document.createElement("div");
     this.allComments.id = "allComments";
     this.textarea = document.getElementById("textarea") as HTMLTextAreaElement;
@@ -32,20 +33,20 @@ export class App {
 
   async start(): Promise<void> {
     new CustomSelect();
-    //  CommentDataController.updateFilter("option1");
 
     const userData = await this.fetchUserData();
     this.processUserData(userData);
     this.submits(userData);
     this.counterText();
+    // Favorites.favorites();
     this.arrayComments = CommentDataController.getComments();
-    this.arrayAnswer = CommentDataController.getAnswer();
-    this.renderFilter();
-    this.renderComments();
-    this.renderAnswer();
+
+    this.renderComments(this.arrayComments);
+    // this.renderAnswer();
     this.renderFavorites();
-    DOMHandler.counterLike(this.arrayComments);
-    DOMHandler.counterLikeAnswer(this.arrayAnswer);
+    this.renderFilter();
+
+
     Answer.submit(userData);
   }
 
@@ -87,7 +88,7 @@ export class App {
 
       const data = userData.results[0]; // Загружаем данные пользователя
 
-      const newPost: CommentData = {
+      const newComment: CommentData = {
         firstName: data.name.first,
         lastName: data.name.last,
         title: data.name.title,
@@ -100,11 +101,12 @@ export class App {
         hours: new Date().getHours(),
         minutes: new Date().getMinutes(),
         id: crypto.randomUUID(),
+        answer: [],
       };
 
       let comments: CommentData[] = CommentDataController.getComments(); // Получаем текущие комментарии
 
-      comments.push(newPost); // Добавляем новый комментарий
+      comments.push(newComment); // Добавляем новый комментарий
 
       CommentDataController.updateComments(comments); // Обновляем комментарии в хранилище
 
@@ -116,10 +118,9 @@ export class App {
       );
 
       this.arrayComments = comments; // Перерисовываем комментарии
-      this.renderComments();
-      this.renderAnswer();
-
-      DOMHandler.counterLike(this.arrayComments);
+      this.renderComments(this.arrayComments);
+  
+      this.renderFavorites();
     });
   }
 
@@ -176,79 +177,63 @@ export class App {
       );
     });
   }
-  renderComments(): void {
-    // Перебираем массив комментариев (this.arrayComments)
-    this.arrayComments.forEach((element) => {
+
+  renderComments(arrayComments: CommentData[]): void {
+    arrayComments.forEach((element) => {
       // Генерируем HTML-код для текущего комментария
+      const commentHTML = new GenerationHTMLElementsComments(
+        element
+      ).generateHTML();
+      const wrapperComment = document.createElement("div");
+      this.allComments.append(wrapperComment);
+      wrapperComment.id = `wrapperComment${element.id}`;
+      // Добавляем текущий комментарий в DOM, используя DOMHandler.appendComment
+      DOMHandler.appendComment(wrapperComment, commentHTML);
+      this.renderAnswer(wrapperComment, element);
+    
+    });
+    DOMHandler.counterLike(arrayComments); // Обновляем значение лайков комментариев
+  DOMHandler.counterLikeAnswer(arrayComments);
+    DOMHandler.countComments(); // Обновляем счетчик комментариев на странице
+  }
+
+  renderAnswer(wrapperComment: HTMLElement, element: CommentData): void {
+    element.answer.forEach((answer: AnswerData) => {
+      DOMHandler.appendAnswer(wrapperComment, answer, element);
+    });
+  }
+
+  renderFavorites(): void {
+    // Очищаем область отображения комментариев перед добавлением новых
+    this.allComments.innerHTML = "";
+
+    // Получаем только избранные комментарии
+    const favoriteComments = this.arrayComments.filter(
+      (comment) => comment.favorites
+    );
+
+    favoriteComments.forEach((element) => {
+      const wrapperComment = document.createElement("div");
+
+      this.allComments.appendChild(wrapperComment);
 
       const commentHTML = new GenerationHTMLElementsComments(
         element
       ).generateHTML();
-
-      const wrapperComment = document.createElement("div");
-      wrapperComment.className = "commentForm";
-      wrapperComment.id = `wrapperComment${element.id}`;
-      this.allComments?.append(wrapperComment);
-      // Генерируем HTML-код для текущего ответа
-
-      // Добавляем текущий комментарий в DOM, используя DOMHandler.appendComment
-      DOMHandler.appendComment(wrapperComment, commentHTML, element.id);
-      // НУЖНО РЕШИТЬ
-      // if (element.answers) {
-      //   element.answers.forEach((answer: any) => {
-      //     // id="answerElement1706283654745"
-      //     const generateHTMLAnswer = new Comment(
-      //       element,
-      //       answer
-      //     ).generateHTMLAnswer();
-
-      //     DOMHandler.appendAnswer(
-      //       wrapperComment,
-      //       generateHTMLAnswer,
-      //       answer.id
-      //     );
-      //   });
-      // }
+      DOMHandler.appendComment(wrapperComment, commentHTML);
     });
 
     // Обновляем счетчик комментариев на странице
-    DOMHandler.countComments();
-  }
-  renderAnswer(): void {
-    const arrayAnswer = CommentDataController.getAnswer();
-    arrayAnswer.forEach((answer: AnswerData) => {
-      const wrapperComment = document.getElementById(
-        `wrapperComment${answer.infoComment.id}`
-      );
-      const generateHTMLAnswer = new GenerationHTMLElementsAnswer(
-        answer
-      ).generateHTMLAnswer();
+    // DOMHandler.countComments();
 
-      DOMHandler.appendAnswer(wrapperComment, generateHTMLAnswer, answer.id);
-    });
-    //
-
-    // DOMHandler.appendAnswer(wrapperComment, dom, answer.id);
+    // После отображения избранных комментариев вызываем метод для отображения остальных комментариев
+    this.renderComments(
+      this.arrayComments.filter((comment) => !comment.favorites)
+    );
   }
+
   renderFilter(): void {
     const filter = CommentDataController.getFilter();
     DOMHandler.filter(filter);
-  }
-  renderFavorites(): void {
-    this.arrayComments.forEach((element) => {
-      document
-        .getElementById(`favorites${element.id}`)
-        .addEventListener("click", (el) => {
-          element.favorites
-            ? (element.favorites = false)
-            : (element.favorites = true);
-          CommentDataController.updateComments(this.arrayComments);
-          const x = el.currentTarget as HTMLElement;
-          x.querySelector("span").innerHTML = `${
-            element.favorites ? "Удалить из избранного" : "Добавить в избранное"
-          }`;
-          console.log(element);
-        });
-    });
   }
 }

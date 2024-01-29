@@ -32,6 +32,9 @@ export class CustomSelect {
         CommentDataController.updateFilter(target.attributes[0].value);
 
         this.selectedOption.textContent = target.textContent || ""; // Скрываем список после выбора опции
+
+
+        
       }
     });
 
