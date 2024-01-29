@@ -43,8 +43,9 @@ export class App {
 
     this.renderComments(this.arrayComments);
     // this.renderAnswer();
-    this.renderFavorites();
+    // this.renderFavorites();
     this.renderFilter();
+    Favorites.toggleFavoritesButton();
 
     Answer.submit(userData);
   }
@@ -178,6 +179,10 @@ export class App {
   }
 
   renderComments(arrayComments: CommentData[]): void {
+
+    // console.log(arrayComments);
+
+    // debugger
     arrayComments.forEach((element) => {
       // Генерируем HTML-код для текущего комментария
       const commentHTML = new GenerationHTMLElementsComments(
@@ -193,6 +198,7 @@ export class App {
     DOMHandler.counterLike(arrayComments); // Обновляем значение лайков комментариев
     DOMHandler.counterLikeAnswer(arrayComments);
     DOMHandler.countComments(); // Обновляем счетчик комментариев на странице
+     
   }
 
   renderAnswer(wrapperComment: HTMLElement, element: CommentData): void {

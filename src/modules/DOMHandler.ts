@@ -5,6 +5,7 @@ export class DOMHandler {
   static clearElement(element: HTMLElement): void {
     element.innerHTML = "";
   }
+
   static countComments() {
     const commentCount =
       JSON.parse(localStorage.getItem("comments"))?.length || 0;
@@ -22,6 +23,7 @@ export class DOMHandler {
       wrapperComment.className = "commentForm";
     }
   }
+
   static appendAnswer(
     wrapperComment: HTMLElement,
     answerData: AnswerData,
@@ -61,49 +63,45 @@ export class DOMHandler {
         `counterPlus${element.id}`
       );
       // if (counterMinusComment != null) {
-        counterMinusComment.addEventListener("click", function () {
+      counterMinusComment.addEventListener("click", function () {
+        // debugger
+        element.like--;
 
-          // debugger
-          element.like--;
-
-          counterNumberComment.innerHTML = `${element.like ? element.like : 0}`;
-          CommentDataController.updateComments(comments);
-          // Обновление счетчика лайков в реальном времени
-          const commentInstance = comments.find(
-            (comment) => comment.id === element.id
-          );
-          if (commentInstance && commentInstance.updateLikeComment) {
-            commentInstance.updateLikeComment(element.like);
-          }
-        });
+        counterNumberComment.innerHTML = `${element.like ? element.like : 0}`;
+        CommentDataController.updateComments(comments);
+        // Обновление счетчика лайков в реальном времени
+        const commentInstance = comments.find(
+          (comment) => comment.id === element.id
+        );
+        if (commentInstance && commentInstance.updateLikeComment) {
+          commentInstance.updateLikeComment(element.like);
+        }
+      });
       // }
       // if (counterPlusComment != null) {
-        counterPlusComment.addEventListener("click", function () {
-          element.like++;
+      counterPlusComment.addEventListener("click", function () {
+        element.like++;
 
-          counterNumberComment.innerHTML = `${element.like}`;
-          CommentDataController.updateComments(comments);
-          // Обновление счетчика лайков в реальном времени
-          const commentInstance = comments.find(
-            (comment) => comment.id === element.id
-          );
-          if (commentInstance && commentInstance.updateLikeComment) {
-            commentInstance.updateLikeComment(element.like);
-          }
-        });
+        counterNumberComment.innerHTML = `${element.like}`;
+        CommentDataController.updateComments(comments);
+        // Обновление счетчика лайков в реальном времени
+        const commentInstance = comments.find(
+          (comment) => comment.id === element.id
+        );
+        if (commentInstance && commentInstance.updateLikeComment) {
+          commentInstance.updateLikeComment(element.like);
+        }
+      });
       // }
     });
   }
 
   static counterLikeAnswer(element: CommentData[]): void {
-   
     // Для реализации лайков на ответах
     element.forEach((elementTwo) => {
-
       // debugger;
 
       elementTwo.answer.forEach((el) => {
-
         let counterNumberAnswer = document.getElementById(
           `counterNumber${el.id}`
         );
@@ -129,9 +127,18 @@ export class DOMHandler {
     });
   }
 
+  static renderFavorites(event: any, x: Boolean) {
+    console.log(
+      (event.srcElement.innerHTML = `${
+        x ? "Удалить из избранного" : "Добавить в избранное"
+      }`)
+    );
+  }
+
   static updateCounterText(counterText: HTMLElement, value: string): void {
     counterText.innerHTML = value;
   }
+
   static filter(filter: string): void {
     const optionsList = document.getElementById(
       `${filter}`
@@ -143,5 +150,4 @@ export class DOMHandler {
       option.innerHTML = "По дате";
     }
   }
-
 }
