@@ -21,8 +21,8 @@ export interface AnswerData {
   title: string;
   text: string;
   img: string;
-  id: string; 
-  idComment: string; 
+  id: string;
+  idComment: string;
   like: number;
   month: number;
   day: number;

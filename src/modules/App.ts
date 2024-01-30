@@ -43,6 +43,7 @@ export class App {
 
     this.renderComments(this.arrayComments);
     // this.renderAnswer();
+    //  this.renderAnswer(wrapperComment, element);
     // this.renderFavorites();
     this.renderFilter();
     Favorites.toggleFavoritesButton();
@@ -193,7 +194,23 @@ export class App {
       wrapperComment.id = `wrapperComment${element.id}`;
       // Добавляем текущий комментарий в DOM, используя DOMHandler.appendComment
       DOMHandler.appendComment(wrapperComment, commentHTML);
-      this.renderAnswer(wrapperComment, element);
+      // debugger
+
+
+
+
+
+      element.answer.forEach((answer: AnswerData) => {
+        DOMHandler.appendAnswer(answer, element);
+      });
+    
+
+
+
+
+
+      
+
     });
     DOMHandler.counterLike(arrayComments); // Обновляем значение лайков комментариев
     DOMHandler.counterLikeAnswer(arrayComments);
@@ -201,11 +218,12 @@ export class App {
      
   }
 
-  renderAnswer(wrapperComment: HTMLElement, element: CommentData): void {
-    element.answer.forEach((answer: AnswerData) => {
-      DOMHandler.appendAnswer(wrapperComment, answer, element);
-    });
-  }
+  // renderAnswer( element: CommentData): void {
+  //   // debugger
+  //   element.answer.forEach((answer: AnswerData) => {
+  //     DOMHandler.appendAnswer( answer, element);
+  //   });
+  // }
 
   renderFavorites(): void {
     // Очищаем область отображения комментариев перед добавлением новых

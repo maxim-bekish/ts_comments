@@ -109,7 +109,9 @@ export class GenerationHTMLElementsAnswer extends GenerationHTMLElementsComments
         <div class="answer_body_footer">
           <div id="favoritesAnswer${this.id}">
             <img src="${heart_2}" alt="" />
-            <span>В Избранное</span>
+           <span>${
+             this.favorites ? "Удалить из избранного" : "Добавить в избранное"
+           }</span>
           </div>
           <div class="counter">
             <div id="counterMinus${this.id}">-</div>

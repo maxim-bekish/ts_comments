@@ -25,7 +25,7 @@ export class DOMHandler {
   }
 
   static appendAnswer(
-    wrapperComment: HTMLElement,
+    // wrapperComment: HTMLElement,
     answerData: AnswerData,
     comment: CommentData
   ) {
@@ -34,9 +34,14 @@ export class DOMHandler {
       comment.firstName,
       comment.lastName
     ).generateHTMLAnswer();
+    const wrapperComment = document.getElementById(
+      `wrapperComment${comment.id}`
+    );
+
     const answerElement = document.createElement("div");
     answerElement.className = "answer";
     answerElement.id = `answerElement${comment.id}`;
+    answerElement.setAttribute("data-answer", answerData.id);
     answerElement.innerHTML = dom;
     if (wrapperComment != null) {
       wrapperComment.append(answerElement);
@@ -98,32 +103,56 @@ export class DOMHandler {
 
   static counterLikeAnswer(element: CommentData[]): void {
     // Для реализации лайков на ответах
+    // debugger;
     element.forEach((elementTwo) => {
       // debugger;
 
-      elementTwo.answer.forEach((el) => {
-        let counterNumberAnswer = document.getElementById(
-          `counterNumber${el.id}`
-        );
-        let counterMinusAnswer = document.getElementById(
-          `counterMinus${el.id}`
-        );
-        let counterPlusAnswer = document.getElementById(`counterPlus${el.id}`);
-        if (counterMinusAnswer != null) {
-          counterMinusAnswer.addEventListener("click", function () {
-            el.like--;
-            counterNumberAnswer.innerHTML = `${el.like ? el.like : 0}`;
-            CommentDataController.updateComments(element);
-          });
-        }
-        if (counterPlusAnswer != null) {
-          counterPlusAnswer.addEventListener("click", function () {
-            el.like++;
-            counterNumberAnswer.innerHTML = `${el.like ? el.like : 0}`;
-            CommentDataController.updateComments(element);
-          });
-        }
+
+
+
+
+
+
+
+
+  elementTwo.answer.forEach((el) => {
+    let counterNumberAnswer = document.getElementById(
+      `counterNumber${el.id}`
+    );
+    let counterMinusAnswer = document.getElementById(
+      `counterMinus${el.id}`
+    );
+    let counterPlusAnswer = document.getElementById(
+      `counterPlus${el.id}`
+    );
+    if (counterMinusAnswer != null) {
+      counterMinusAnswer.addEventListener("click", function () {
+        el.like--;
+        counterNumberAnswer.innerHTML = `${el.like ? el.like : 0}`;
+        CommentDataController.updateComments(element);
       });
+    }
+    if (counterPlusAnswer != null) {
+      counterPlusAnswer.addEventListener("click", function () {
+        el.like++;
+        counterNumberAnswer.innerHTML = `${el.like ? el.like : 0}`;
+        CommentDataController.updateComments(element);
+      });
+    }
+  });
+
+
+
+
+
+
+
+
+
+
+
+
+  
     });
   }
 

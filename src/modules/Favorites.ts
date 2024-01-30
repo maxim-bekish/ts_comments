@@ -4,37 +4,57 @@ import { DOMHandler } from "./DOMHandler";
 import { AnswerData, CommentData } from "./types";
 
 export class Favorites {
-  static favorites() {
+  static favorites(): void {
     const rrr = document.querySelector(".menu_favorites");
+
     rrr.addEventListener("click", function () {
-      Favorites.listFavorites();
-    });
-  }
+      // Получаем все комментарии
+      const comments = CommentDataController.getComments();
 
-  static listFavorites(): void {
-    // Получаем все комментарии
-    const comments = CommentDataController.getComments();
-
-    const listFavorites: any = [];
-    // Фильтруем только избранные комментарии
-    console.log(comments);
-    comments.forEach((comment: any) => {
-      if (comment.favorites) {
-        console.log(comment);
-        listFavorites.push(comment);
-      }
-      comment.answer.forEach((answers: { favorites: any }) => {
-        if (answers.favorites) {
-          console.log(answers);
-          listFavorites.push(answers);
+      const listFavorites: any = [];
+      // Фильтруем только избранные комментарии
+      console.log(comments);
+      comments.forEach((comment: any) => {
+        // debugger;
+        if (comment.favorites) {
+          console.log(comment);
+          listFavorites.push(comment);
         }
+        comment.answer.forEach(
+          (answers: { favorites: boolean; id: string }, idwww: number) => {
+            if (answers.favorites) {
+              console.log(idwww);
+              listFavorites[listFavorites.length - 1].answer.push(answers);
+            }
+            if (!answers.favorites) {
+              if (
+                answers.id ===
+                listFavorites[listFavorites.length - 1]?.answer[idwww]?.id
+              ) {
+                listFavorites[listFavorites.length - 1].answer.splice(idwww, 1);
+              }
+            }
+          }
+        );
       });
+
+      console.log(listFavorites);
+
+      document.getElementById("allComments").innerHTML = "";
+
+      if (JSON.parse(localStorage.getItem("favorites"))) {
+        localStorage.setItem("favorites", "false");
+        const app = new App();
+        app.renderComments(comments);
+      } else {
+        localStorage.setItem("favorites", "true");
+        const app = new App();
+        app.renderComments(listFavorites);
+      }
+
+      // const app = new App();
+      // app.renderComments(listFavorites);
     });
-    // После того как мы обновили состояние избранного в localStorage,
-    // мы должны вызвать метод renderComments из класса App,
-    // передав только избранные комментарии для отрисовки.
-    const app = new App();
-    app.renderComments(listFavorites);
   }
   static toggleFavoritesButton(): void {
     const comments = CommentDataController.getComments();
