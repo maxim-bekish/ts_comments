@@ -121,7 +121,7 @@ export class App {
       this.arrayComments = comments; // Перерисовываем комментарии
       this.renderComments(this.arrayComments);
 
-      this.renderFavorites();
+      // this.renderFavorites();
     });
   }
 
@@ -180,7 +180,6 @@ export class App {
   }
 
   renderComments(arrayComments: CommentData[]): void {
-
     // console.log(arrayComments);
 
     // debugger
@@ -196,26 +195,15 @@ export class App {
       DOMHandler.appendComment(wrapperComment, commentHTML);
       // debugger
 
-
-
-
-
-      element.answer.forEach((answer: AnswerData) => {
-        DOMHandler.appendAnswer(answer, element);
-      });
-    
-
-
-
-
-
-      
-
+      if (element.answer) {
+        element.answer.forEach((answer: AnswerData) => {
+          DOMHandler.appendAnswer(answer, element);
+        });
+      }
     });
     DOMHandler.counterLike(arrayComments); // Обновляем значение лайков комментариев
     DOMHandler.counterLikeAnswer(arrayComments);
     DOMHandler.countComments(); // Обновляем счетчик комментариев на странице
-     
   }
 
   // renderAnswer( element: CommentData): void {

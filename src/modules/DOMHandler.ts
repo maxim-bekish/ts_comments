@@ -107,52 +107,33 @@ export class DOMHandler {
     element.forEach((elementTwo) => {
       // debugger;
 
-
-
-
-
-
-
-
-
-  elementTwo.answer.forEach((el) => {
-    let counterNumberAnswer = document.getElementById(
-      `counterNumber${el.id}`
-    );
-    let counterMinusAnswer = document.getElementById(
-      `counterMinus${el.id}`
-    );
-    let counterPlusAnswer = document.getElementById(
-      `counterPlus${el.id}`
-    );
-    if (counterMinusAnswer != null) {
-      counterMinusAnswer.addEventListener("click", function () {
-        el.like--;
-        counterNumberAnswer.innerHTML = `${el.like ? el.like : 0}`;
-        CommentDataController.updateComments(element);
-      });
-    }
-    if (counterPlusAnswer != null) {
-      counterPlusAnswer.addEventListener("click", function () {
-        el.like++;
-        counterNumberAnswer.innerHTML = `${el.like ? el.like : 0}`;
-        CommentDataController.updateComments(element);
-      });
-    }
-  });
-
-
-
-
-
-
-
-
-
-
-
-
-  
+      if (elementTwo.answer) {
+        elementTwo.answer.forEach((el) => {
+          let counterNumberAnswer = document.getElementById(
+            `counterNumber${el.id}`
+          );
+          let counterMinusAnswer = document.getElementById(
+            `counterMinus${el.id}`
+          );
+          let counterPlusAnswer = document.getElementById(
+            `counterPlus${el.id}`
+          );
+          if (counterMinusAnswer != null) {
+            counterMinusAnswer.addEventListener("click", function () {
+              el.like--;
+              counterNumberAnswer.innerHTML = `${el.like ? el.like : 0}`;
+              CommentDataController.updateComments(element);
+            });
+          }
+          if (counterPlusAnswer != null) {
+            counterPlusAnswer.addEventListener("click", function () {
+              el.like++;
+              counterNumberAnswer.innerHTML = `${el.like ? el.like : 0}`;
+              CommentDataController.updateComments(element);
+            });
+          }
+        });
+      }
     });
   }
 

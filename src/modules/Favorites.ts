@@ -6,39 +6,27 @@ import { AnswerData, CommentData } from "./types";
 export class Favorites {
   static favorites(): void {
     const rrr = document.querySelector(".menu_favorites");
-
     rrr.addEventListener("click", function () {
       // Получаем все комментарии
       const comments = CommentDataController.getComments();
 
       const listFavorites: any = [];
       // Фильтруем только избранные комментарии
-      console.log(comments);
+
       comments.forEach((comment: any) => {
-        // debugger;
         if (comment.favorites) {
-          console.log(comment);
-          listFavorites.push(comment);
+          const newComments = { ...comment, answer: [] }; // создаем новый объект с ответами
+          listFavorites.push(newComments);
         }
-        comment.answer.forEach(
-          (answers: { favorites: boolean; id: string }, idwww: number) => {
-            if (answers.favorites) {
-              console.log(idwww);
-              listFavorites[listFavorites.length - 1].answer.push(answers);
-            }
-            if (!answers.favorites) {
-              if (
-                answers.id ===
-                listFavorites[listFavorites.length - 1]?.answer[idwww]?.id
-              ) {
-                listFavorites[listFavorites.length - 1].answer.splice(idwww, 1);
-              }
-            }
+        const tempAnswer = comment.answer;
+        tempAnswer.forEach((answers: { favorites: Boolean; id: string }) => {
+          if (answers.favorites) {
+            listFavorites.push(answers);
           }
-        );
+        });
       });
 
-      console.log(listFavorites);
+
 
       document.getElementById("allComments").innerHTML = "";
 

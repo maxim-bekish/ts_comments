@@ -74,8 +74,8 @@ export class Answer {
       if (id === element.id) {
         element.answer.push(answerData);
         CommentDataController.updateComments(arrayAnswer);
-        DOMHandler.appendAnswer( answerData, element);
-        debugger
+        DOMHandler.appendAnswer(answerData, element);
+        // debugger
       }
     });
     buttonAddAnswer.style.display = "none";
