@@ -4,51 +4,46 @@ import { DOMHandler } from "./DOMHandler";
 import { AnswerData, CommentData } from "./types";
 
 export class Favorites {
-  static favorites(): void {
+  static updateToggle(): void {
     const rrr = document.querySelector(".menu_favorites");
-    rrr.addEventListener("click", function () {
+    const allComments = document.getElementById("allComments");
+    rrr.addEventListener("click", () => {
       // Получаем все комментарии
       const comments = CommentDataController.getComments();
-
-      const listFavorites: any = [];
-      // Фильтруем только избранные комментарии
-
-      comments.forEach((comment: any) => {
-        if (comment.favorites) {
-          const newComments = { ...comment, answer: [] }; // создаем новый объект с ответами
-          listFavorites.push(newComments);
-        }
-        const tempAnswer = comment.answer;
-        tempAnswer.forEach((answers: { favorites: Boolean; id: string }) => {
-          if (answers.favorites) {
-            listFavorites.push(answers);
-          }
-        });
-      });
-
-
-
-      document.getElementById("allComments").innerHTML = "";
-
+      const sort = JSON.parse(localStorage.getItem("sort"));
       if (JSON.parse(localStorage.getItem("favorites"))) {
         localStorage.setItem("favorites", "false");
-        const app = new App();
-        app.renderComments(comments);
+        DOMHandler.clearElement(allComments);
+        App.renderComments(comments);
       } else {
         localStorage.setItem("favorites", "true");
-        const app = new App();
-        app.renderComments(listFavorites);
+        DOMHandler.clearElement(allComments);
+        App.renderComments(sort);
       }
-
-      // const app = new App();
-      // app.renderComments(listFavorites);
     });
   }
-  static toggleFavoritesButton(): void {
-    const comments = CommentDataController.getComments();
 
+  static updateSort(arrayComments: CommentData[]): void {
+    const listFavorites: any = [];
+    // Фильтруем только избранные комментарии
+
+    arrayComments.forEach((comment: any) => {
+      if (comment.favorites) {
+        const newComments = { ...comment, answer: [] }; // создаем новый объект с ответами
+        listFavorites.push(newComments);
+      }
+      const tempAnswer = comment.answer;
+      tempAnswer.forEach((answers: { favorites: Boolean; id: string }) => {
+        if (answers.favorites) {
+          listFavorites.push(answers);
+        }
+      });
+    });
+    localStorage.setItem("sort", JSON.stringify(listFavorites));
+  }
+
+  static toggleFavoritesButton(comments: CommentData[]): void {
     comments.forEach((comment: CommentData) => {
-      // CommentDataController.updateComments(comments);
       document
         .getElementById(`favorites${comment.id}`)
         .addEventListener("click", function (event) {
@@ -59,26 +54,33 @@ export class Favorites {
             comment.favorites = true;
             DOMHandler.renderFavorites(event, true);
           }
+          DOMHandler.counterLike(comments);
+
+          DOMHandler.counterLikeAnswer(comments);
+
           CommentDataController.updateComments(comments);
+          Favorites.updateSort(comments);
         });
+      if (comment.answer) {
+        comment.answer.forEach((answers: AnswerData) => {
+          document
+            .getElementById(`favoritesAnswer${answers.id}`)
+            .addEventListener("click", function (event) {
+              if (answers.favorites) {
+                answers.favorites = false;
+                DOMHandler.renderFavorites(event, false);
+              } else {
+                answers.favorites = true;
+                DOMHandler.renderFavorites(event, true);
+              }
+              DOMHandler.counterLike(comments);
+              DOMHandler.counterLikeAnswer(comments);
 
-      // CommentDataController.updateComments(comments);
-
-      comment.answer.forEach((answers: AnswerData) => {
-        document
-          .getElementById(`favoritesAnswer${answers.id}`)
-          .addEventListener("click", function (event) {
-            if (answers.favorites) {
-              answers.favorites = false;
-              DOMHandler.renderFavorites(event, false);
-            } else {
-              answers.favorites = true;
-              DOMHandler.renderFavorites(event, true);
-            }
-            CommentDataController.updateComments(comments);
-            // DOMHandler.renderFavorites(event);
-          });
-      });
+              CommentDataController.updateComments(comments);
+              Favorites.updateSort(comments);
+            });
+        });
+      }
     });
   }
 }

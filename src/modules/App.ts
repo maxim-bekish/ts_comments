@@ -12,17 +12,18 @@ import { Favorites } from "./Favorites";
 
 export class App {
   private userOne: HTMLElement | null;
-  private submit: HTMLButtonElement;
+  private submitAddComment: HTMLButtonElement;
   private arrayComments: CommentData[];
   private arrayAnswer: AnswerData[];
   private textarea: HTMLTextAreaElement;
   private allComments: HTMLDivElement | null;
   private main: HTMLElement | null;
-  static renderComments: any;
 
   constructor() {
     this.userOne = document.getElementById("user");
-    this.submit = document.getElementById("submit") as HTMLButtonElement;
+    this.submitAddComment = document.getElementById(
+      "submit"
+    ) as HTMLButtonElement;
     this.arrayComments = [];
 
     this.allComments = document.createElement("div");
@@ -37,16 +38,11 @@ export class App {
     const userData = await this.fetchUserData();
     this.processUserData(userData);
     this.submits(userData);
-    this.counterText();
-    Favorites.favorites();
     this.arrayComments = CommentDataController.getComments();
-
-    this.renderComments(this.arrayComments);
-    // this.renderAnswer();
-    //  this.renderAnswer(wrapperComment, element);
-    // this.renderFavorites();
+    App.renderComments(this.arrayComments);
+    this.counterText();
+    Favorites.updateToggle();
     this.renderFilter();
-    Favorites.toggleFavoritesButton();
 
     Answer.submit(userData);
   }
@@ -72,19 +68,19 @@ export class App {
       this.textarea.value.split("").length <= 1000 &&
       this.textarea.value.split("").length > 0
     ) {
-      this.submit.disabled = false;
+      this.submitAddComment.disabled = false;
       text = this.textarea.value;
     } else {
-      this.submit.disabled = true;
+      this.submitAddComment.disabled = true;
     }
     return text;
   }
   submits(userData: any): void {
-    if (!this.submit || !this.main) return;
+    if (!this.submitAddComment || !this.main) return;
 
     this.main.append(this.allComments);
 
-    this.submit.addEventListener("click", async () => {
+    this.submitAddComment.addEventListener("click", async () => {
       DOMHandler.clearElement(this.allComments);
 
       const data = userData.results[0]; // Загружаем данные пользователя
@@ -109,6 +105,8 @@ export class App {
 
       comments.push(newComment); // Добавляем новый комментарий
 
+      console.log(comments[0].like, comments[0].favorites);
+
       CommentDataController.updateComments(comments); // Обновляем комментарии в хранилище
 
       this.textarea.value = ""; // Очищаем форму
@@ -119,9 +117,8 @@ export class App {
       );
 
       this.arrayComments = comments; // Перерисовываем комментарии
-      this.renderComments(this.arrayComments);
 
-      // this.renderFavorites();
+      App.renderComments(this.arrayComments);
     });
   }
 
@@ -179,39 +176,30 @@ export class App {
     });
   }
 
-  renderComments(arrayComments: CommentData[]): void {
-    // console.log(arrayComments);
-
-    // debugger
-    arrayComments.forEach((element) => {
+  static renderComments(comments: CommentData[]): void {
+    // const comments: CommentData[] = CommentDataController.getComments();
+    comments.forEach((element: any) => {
       // Генерируем HTML-код для текущего комментария
       const commentHTML = new GenerationHTMLElementsComments(
         element
       ).generateHTML();
       const wrapperComment = document.createElement("div");
-      this.allComments.append(wrapperComment);
+      const wrapperAnswer = document.createElement("div");
       wrapperComment.id = `wrapperComment${element.id}`;
+      wrapperAnswer.id = `wrapperAnswer${element.id}`;
+
       // Добавляем текущий комментарий в DOM, используя DOMHandler.appendComment
       DOMHandler.appendComment(wrapperComment, commentHTML);
-      // debugger
-
-      if (element.answer) {
-        element.answer.forEach((answer: AnswerData) => {
-          DOMHandler.appendAnswer(answer, element);
-        });
-      }
+      DOMHandler.appendAnswer(wrapperAnswer, element);
     });
-    DOMHandler.counterLike(arrayComments); // Обновляем значение лайков комментариев
-    DOMHandler.counterLikeAnswer(arrayComments);
-    DOMHandler.countComments(); // Обновляем счетчик комментариев на странице
-  }
 
-  // renderAnswer( element: CommentData): void {
-  //   // debugger
-  //   element.answer.forEach((answer: AnswerData) => {
-  //     DOMHandler.appendAnswer( answer, element);
-  //   });
-  // }
+    DOMHandler.counterLike(comments); // Обновляем значение лайков комментариев
+    DOMHandler.counterLikeAnswer(comments); // Обновляем значение лайков ответов
+    Favorites.toggleFavoritesButton(comments); // Обновляем состояние избранных
+
+    DOMHandler.countComments(); // Обновляем счетчик комментариев на странице
+    // CommentDataController.updateComments(arrayComments);
+  }
 
   renderFavorites(): void {
     // Очищаем область отображения комментариев перед добавлением новых
@@ -232,14 +220,6 @@ export class App {
       ).generateHTML();
       DOMHandler.appendComment(wrapperComment, commentHTML);
     });
-
-    // Обновляем счетчик комментариев на странице
-    // DOMHandler.countComments();
-
-    // После отображения избранных комментариев вызываем метод для отображения остальных комментариев
-    // this.renderComments(
-    //   this.arrayComments.filter((comment) => !comment.favorites)
-    // );
   }
 
   renderFilter(): void {

@@ -1,58 +1,58 @@
 import { CommentData, AnswerData, UserData } from "./types";
 import { CommentDataController } from "./CommentDataController";
-import { GenerationHTMLElementsAnswer } from "./Comment";
 import { DOMHandler } from "./DOMHandler";
-
+import { Favorites } from "./Favorites";
 export class Answer {
-  static submit(userData: UserData): void {
+  static submit(userData: UserData) {
     try {
-      let dataComments = CommentDataController.getComments();
-
-      dataComments.forEach((element) => {
+      let comments: CommentData[] = CommentDataController.getComments();
+      comments.forEach((element) => {
         // wrapperComment -  блок с комментами ответами и новым полем ввода
-        const wrapperComment = document.getElementById(
-          `wrapperComment${element.id}`
+        const wrapperAnswer = document.getElementById(
+          `wrapperAnswer${element.id}`
         );
-
+        const buttonAnswer = document.getElementById(
+          `answerButton${element.id}`
+        ); // buttonAnswer - кнопка "ответить"
         const inputAnswer = document.createElement("input");
         const buttonAddAnswer = document.createElement("button"); //кнопка добавления комментария;
         inputAnswer.type = "text";
         buttonAddAnswer.innerHTML = "submit";
-
-        // buttonAnswer - кнопка "ответить"
-        const buttonAnswer = document.getElementById(
-          `answerButton${element.id}`
-        );
-
         buttonAnswer.addEventListener("click", () => {
           this.handleAnswerButtonClick(
-            wrapperComment,
+            wrapperAnswer,
             inputAnswer,
             buttonAddAnswer
           );
         });
-
         buttonAddAnswer.addEventListener("click", () => {
+          DOMHandler.clearElement(wrapperAnswer);
           this.handleButtonClick(
             inputAnswer,
             buttonAddAnswer,
-            wrapperComment,
+            wrapperAnswer,
             userData,
-            element.id
+            element
           );
         });
+        CommentDataController.updateComments(comments);
+        DOMHandler.counterLike(comments);
+        DOMHandler.counterLikeAnswer(comments);
+        Favorites.toggleFavoritesButton(comments);
       });
     } catch (error) {
       console.error("Ошибка при получении данных пользователя:", error);
     }
   }
-
+  static answerTest(arrayComments: CommentData[]): void {
+    arrayComments.forEach((el) => {});
+  }
   private static handleButtonClick(
     inputAnswer: HTMLInputElement, // элемент input
     buttonAddAnswer: HTMLButtonElement, // элемент button
-    wrapperComment: HTMLElement, // элемент div куда вставить ответ
+    wrapperAnswer: HTMLElement, // элемент div куда вставить ответ
     userData: UserData, // данные юзера который отвечает
-    id: string // id нужного объекта в массиве
+    el: CommentData // один комментарий
   ): void {
     const answerData = {
       firstName: userData.results[0].name.first,
@@ -61,7 +61,7 @@ export class Answer {
       text: inputAnswer.value,
       img: userData.results[0].picture.large,
       id: crypto.randomUUID(), // Use a unique identifier
-      idComment: id,
+      idComment: el.id,
       like: 0,
       month: new Date().getMonth() + 1,
       day: new Date().getDate(),
@@ -69,27 +69,19 @@ export class Answer {
       minutes: new Date().getMinutes(),
       favorites: false,
     };
-    const arrayAnswer = CommentDataController.getComments();
-    arrayAnswer.map((element) => {
-      if (id === element.id) {
-        element.answer.push(answerData);
-        CommentDataController.updateComments(arrayAnswer);
-        DOMHandler.appendAnswer(answerData, element);
-        // debugger
-      }
-    });
+    el.answer.push(answerData);
+    DOMHandler.appendAnswer(wrapperAnswer, el);
     buttonAddAnswer.style.display = "none";
     inputAnswer.style.display = "none";
   }
-
   // Добавляет форму ввода ответа
   private static handleAnswerButtonClick(
-    wrapperComment: HTMLElement,
+    wrapperAnswer: HTMLElement,
     inputAnswer: HTMLInputElement,
     buttonAddAnswer: HTMLButtonElement
   ): void {
-    wrapperComment.append(inputAnswer);
-    wrapperComment.append(buttonAddAnswer);
+    wrapperAnswer.append(inputAnswer);
+    wrapperAnswer.append(buttonAddAnswer);
     buttonAddAnswer.style.display = "block";
     inputAnswer.style.display = "block";
     inputAnswer.value = "";

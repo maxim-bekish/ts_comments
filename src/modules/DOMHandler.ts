@@ -1,6 +1,7 @@
 import { AnswerData, CommentData } from "./types";
 import { CommentDataController } from "./CommentDataController";
 import { GenerationHTMLElementsAnswer } from "./Comment";
+import { Favorites } from "./Favorites";
 export class DOMHandler {
   static clearElement(element: HTMLElement): void {
     element.innerHTML = "";
@@ -20,39 +21,34 @@ export class DOMHandler {
 
     if (allComments) {
       allComments.appendChild(wrapperComment);
+
       wrapperComment.className = "commentForm";
     }
   }
 
-  static appendAnswer(
-    // wrapperComment: HTMLElement,
-    answerData: AnswerData,
-    comment: CommentData
-  ) {
-    const dom = new GenerationHTMLElementsAnswer(
-      answerData,
-      comment.firstName,
-      comment.lastName
-    ).generateHTMLAnswer();
+  static appendAnswer(wrapperAnswer: HTMLElement, comment: CommentData) {
     const wrapperComment = document.getElementById(
       `wrapperComment${comment.id}`
     );
 
-    const answerElement = document.createElement("div");
-    answerElement.className = "answer";
-    answerElement.id = `answerElement${comment.id}`;
-    answerElement.setAttribute("data-answer", answerData.id);
-    answerElement.innerHTML = dom;
-    if (wrapperComment != null) {
-      wrapperComment.append(answerElement);
-    }
+    wrapperComment.appendChild(wrapperAnswer);
+    wrapperAnswer.className = "answerForm";
 
-    // arrayAnswer.forEach((answer: any) => {
-    //   const dom = new GenerationHTMLElementsAnswer(answer).generateHTMLAnswer();
-    //   if (!document.getElementById(`answerElement${answer.id}`)) {
-    //     DOMHandler.appendAnswer(wrapperComment, dom, answer.id);
-    //   }
-    // });
+    if (comment?.answer) {
+      comment.answer.forEach((answer: AnswerData) => {
+        const elementHTMLAnswer = new GenerationHTMLElementsAnswer(
+          answer,
+          comment.firstName,
+          comment.lastName
+        ).generateHTMLAnswer();
+        const answerElement = document.createElement("div");
+        answerElement.className = "answer";
+        answerElement.id = `answerElement${answer.id}`;
+        answerElement.setAttribute("data-answer", comment.id);
+        answerElement.innerHTML = elementHTMLAnswer;
+        wrapperAnswer.append(answerElement);
+      });
+    }
   }
 
   static counterLike(comments: CommentData[]): void {
@@ -67,44 +63,35 @@ export class DOMHandler {
       const counterPlusComment = document.getElementById(
         `counterPlus${element.id}`
       );
-      // if (counterMinusComment != null) {
       counterMinusComment.addEventListener("click", function () {
-        // debugger
         element.like--;
-
         counterNumberComment.innerHTML = `${element.like ? element.like : 0}`;
-        CommentDataController.updateComments(comments);
+
         // Обновление счетчика лайков в реальном времени
-        const commentInstance = comments.find(
-          (comment) => comment.id === element.id
-        );
-        if (commentInstance && commentInstance.updateLikeComment) {
-          commentInstance.updateLikeComment(element.like);
-        }
+
+        console.log(comments[0].like, comments[0].favorites);
+        CommentDataController.updateComments(comments);
       });
       // }
-      // if (counterPlusComment != null) {
       counterPlusComment.addEventListener("click", function () {
         element.like++;
 
         counterNumberComment.innerHTML = `${element.like}`;
+
+        console.log(comments[0].like, comments[0].favorites);
         CommentDataController.updateComments(comments);
+
         // Обновление счетчика лайков в реальном времени
-        const commentInstance = comments.find(
-          (comment) => comment.id === element.id
-        );
-        if (commentInstance && commentInstance.updateLikeComment) {
-          commentInstance.updateLikeComment(element.like);
-        }
       });
       // }
     });
   }
 
-  static counterLikeAnswer(element: CommentData[]): void {
+  static counterLikeAnswer(comments: CommentData[]): void {
     // Для реализации лайков на ответах
     // debugger;
-    element.forEach((elementTwo) => {
+
+    comments.forEach((elementTwo) => {
       // debugger;
 
       if (elementTwo.answer) {
@@ -122,14 +109,14 @@ export class DOMHandler {
             counterMinusAnswer.addEventListener("click", function () {
               el.like--;
               counterNumberAnswer.innerHTML = `${el.like ? el.like : 0}`;
-              CommentDataController.updateComments(element);
+              CommentDataController.updateComments(comments);
             });
           }
           if (counterPlusAnswer != null) {
             counterPlusAnswer.addEventListener("click", function () {
               el.like++;
               counterNumberAnswer.innerHTML = `${el.like ? el.like : 0}`;
-              CommentDataController.updateComments(element);
+              CommentDataController.updateComments(comments);
             });
           }
         });
@@ -138,11 +125,9 @@ export class DOMHandler {
   }
 
   static renderFavorites(event: any, x: Boolean) {
-    console.log(
-      (event.srcElement.innerHTML = `${
-        x ? "Удалить из избранного" : "Добавить в избранное"
-      }`)
-    );
+    event.srcElement.innerHTML = `${
+      x ? "Удалить из избранного" : "Добавить в избранное"
+    }`;
   }
 
   static updateCounterText(counterText: HTMLElement, value: string): void {

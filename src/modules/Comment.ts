@@ -50,7 +50,7 @@ export class GenerationHTMLElementsComments {
           ${this.text}
         </div>
         <div class="comment_body_footer">
-          <div id="answerButton${this.id}" >
+          <div id="answerButton${this.id}">
             <img src="${answerButton}" />
             <span> Ответ</span>
           </div>
@@ -69,15 +69,6 @@ export class GenerationHTMLElementsComments {
       </div>
     </div>`;
   }
-
-  updateLikeComment(newLike: number): void {
-    this.like = newLike;
-    // Обновите DOM-элемент для счетчика лайков
-    const counterElement = document.getElementById(`counterNumber${this.id}`);
-    if (counterElement) {
-      counterElement.innerHTML = `${newLike}`;
-    }
-  }
 }
 export class GenerationHTMLElementsAnswer extends GenerationHTMLElementsComments {
   private firstNameComment: string;
@@ -90,8 +81,6 @@ export class GenerationHTMLElementsAnswer extends GenerationHTMLElementsComments
   }
 
   generateHTMLAnswer(): string {
-
-
     return `
       <div class="answer_avatar avatar">
         <img src="${this.img}" alt="avatar" />

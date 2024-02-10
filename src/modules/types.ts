@@ -12,7 +12,6 @@ export interface CommentData {
   minutes: number;
   favorites: boolean;
   answer?:  AnswerData[];
-  updateLikeComment?: (newLike: number) => void;
 }
 
 export interface AnswerData {
@@ -29,8 +28,6 @@ export interface AnswerData {
   hours: number;
   minutes: number;
   favorites: boolean;
-
-  updateLikeAnswer?: (newLike: number) => void;
 }
 
 export interface UserData {
