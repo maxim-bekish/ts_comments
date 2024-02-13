@@ -1,6 +1,6 @@
 import { DOMHandler } from "./DOMHandler";
 import { HTML_Comments } from "./HTML_Comments";
-import { CommentData } from "./types";
+import { AnswerData, CommentData } from "./types";
 
 export class Comments {
   newUser(
@@ -34,5 +34,48 @@ export class Comments {
     localStorage.setItem("comments", JSON.stringify(comments));
     let htmlComment = new HTML_Comments(newComment).generateHTML();
     DOMHandler.addCommentInDOM(htmlComment, newComment);
+  }
+  newAnswer(
+    newData: {
+      first: string;
+      last: string;
+      title: string;
+      img: string;
+    },
+    text: string,
+    idComment: string
+  ): void {
+    const newAnswer: AnswerData = {
+      firstName: newData.first,
+      lastName: newData.last,
+      title: newData.title,
+      img: newData.img,
+      like: 0,
+      favorites: false,
+      text: text,
+      month: new Date().getMonth() + 1,
+      day: new Date().getDate(),
+      hours: new Date().getHours(),
+      minutes: new Date().getMinutes(),
+      id: crypto.randomUUID(),
+      idComment: idComment,
+    };
+    const comments: CommentData[] = JSON.parse(
+      localStorage.getItem("comments")
+    );
+    comments.forEach((el) => {
+      if (el.id === idComment) {
+        el.answers.push(newAnswer);
+        let htmlAnswer = new HTML_Comments(
+          newAnswer,
+          el.firstName,
+          el.lastName
+        ).generateHTMLAnswer();
+        DOMHandler.addAnswerInDOM(htmlAnswer, newAnswer);
+      }
+    });
+
+    // comments.push(newComments);
+    localStorage.setItem("comments", JSON.stringify(comments));
   }
 }

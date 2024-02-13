@@ -199,6 +199,11 @@ body {
       }
     }
   }
+  .allAnswers{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
   .answer {
     margin: 28px 0 28px 90px;
     display: flex;
