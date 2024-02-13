@@ -1,5 +1,5 @@
 export interface CommentData {
-  firstName: string | any;
+  firstName: string;
   lastName: string;
   title: string;
   text: string;
@@ -11,7 +11,7 @@ export interface CommentData {
   hours: number;
   minutes: number;
   favorites: boolean;
-  answers?: AnswerData[];
+  answer?:  AnswerData[];
 }
 
 export interface AnswerData {
@@ -30,15 +30,15 @@ export interface AnswerData {
   favorites: boolean;
 }
 
-// export interface UserData {
-//   results: {
-//     name: {
-//       first: string;
-//       last: string;
-//       title: string;
-//     };
-//     picture: {
-//       large: string;
-//     };
-//   }[];
-// }
+export interface UserData {
+  results: {
+    name: {
+      first: string;
+      last: string;
+      title: string;
+    };
+    picture: {
+      large: string;
+    };
+  }[];
+}

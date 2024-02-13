@@ -1,6 +1,6 @@
 import heart_2 from "./../assets/svg/heart-2.svg";
-import share from "./../assets/svg/share.svg";
 import answerButton from "./../assets/svg/share.svg";
+import share from "./../assets/svg/share.svg";
 import { Answer } from "./Answer";
 import { CommentData, AnswerData } from "./types";
 export class GenerationHTMLElementsComments {
