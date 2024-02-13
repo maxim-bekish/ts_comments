@@ -3,11 +3,17 @@ import { CommentDataController } from "./CommentDataController";
 import { DOMHandler } from "./DOMHandler";
 import { Favorites } from "./Favorites";
 export class Answer {
+
+
+
+
   static submit(userData: UserData) {
     try {
       let comments: CommentData[] = CommentDataController.getComments();
+
       comments.forEach((element) => {
         // wrapperComment -  блок с комментами ответами и новым полем ввода
+
         const wrapperAnswer = document.getElementById(
           `wrapperAnswer${element.id}`
         );
@@ -18,6 +24,9 @@ export class Answer {
         const buttonAddAnswer = document.createElement("button"); //кнопка добавления комментария;
         inputAnswer.type = "text";
         buttonAddAnswer.innerHTML = "submit";
+
+
+
         buttonAnswer.addEventListener("click", () => {
           this.handleAnswerButtonClick(
             wrapperAnswer,
@@ -25,6 +34,11 @@ export class Answer {
             buttonAddAnswer
           );
         });
+
+
+
+
+
         buttonAddAnswer.addEventListener("click", () => {
           DOMHandler.clearElement(wrapperAnswer);
           this.handleButtonClick(
@@ -34,19 +48,19 @@ export class Answer {
             userData,
             element
           );
+
+          CommentDataController.updateComments(comments);
         });
-        CommentDataController.updateComments(comments);
-        DOMHandler.counterLike(comments);
-        DOMHandler.counterLikeAnswer(comments);
+      
+        // DOMHandler.counterLike(comments);
+        // DOMHandler.counterLikeAnswer(comments);
         Favorites.toggleFavoritesButton(comments);
       });
     } catch (error) {
       console.error("Ошибка при получении данных пользователя:", error);
     }
   }
-  static answerTest(arrayComments: CommentData[]): void {
-    arrayComments.forEach((el) => {});
-  }
+
   private static handleButtonClick(
     inputAnswer: HTMLInputElement, // элемент input
     buttonAddAnswer: HTMLButtonElement, // элемент button
@@ -70,7 +84,9 @@ export class Answer {
       favorites: false,
     };
     el.answer.push(answerData);
+
     DOMHandler.appendAnswer(wrapperAnswer, el);
+
     buttonAddAnswer.style.display = "none";
     inputAnswer.style.display = "none";
   }

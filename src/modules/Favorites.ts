@@ -54,9 +54,9 @@ export class Favorites {
             comment.favorites = true;
             DOMHandler.renderFavorites(event, true);
           }
-          DOMHandler.counterLike(comments);
+          // DOMHandler.counterLike(comments);
 
-          DOMHandler.counterLikeAnswer(comments);
+          // DOMHandler.counterLikeAnswer(comments);
 
           CommentDataController.updateComments(comments);
           Favorites.updateSort(comments);
@@ -73,8 +73,8 @@ export class Favorites {
                 answers.favorites = true;
                 DOMHandler.renderFavorites(event, true);
               }
-              DOMHandler.counterLike(comments);
-              DOMHandler.counterLikeAnswer(comments);
+              // DOMHandler.counterLike(comments);
+              // DOMHandler.counterLikeAnswer(comments);
 
               CommentDataController.updateComments(comments);
               Favorites.updateSort(comments);

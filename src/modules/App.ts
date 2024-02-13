@@ -43,7 +43,6 @@ export class App {
     this.counterText();
     Favorites.updateToggle();
     this.renderFilter();
-
     Answer.submit(userData);
   }
 
@@ -83,7 +82,7 @@ export class App {
     this.submitAddComment.addEventListener("click", async () => {
       DOMHandler.clearElement(this.allComments);
 
-      const data = userData.results[0]; // Загружаем данные пользователя
+      const data = userData.results[0];
 
       const newComment: CommentData = {
         firstName: data.name.first,
@@ -116,9 +115,7 @@ export class App {
         "Max 1000"
       );
 
-      this.arrayComments = comments; // Перерисовываем комментарии
-
-      App.renderComments(this.arrayComments);
+      App.renderComments(comments);
     });
   }
 

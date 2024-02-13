@@ -51,6 +51,10 @@ export class DOMHandler {
     }
   }
 
+
+
+
+
   static counterLike(comments: CommentData[]): void {
     comments.forEach((element: CommentData) => {
       // Для реализации лайков на комментариях
@@ -69,7 +73,7 @@ export class DOMHandler {
 
         // Обновление счетчика лайков в реальном времени
 
-        console.log(comments[0].like, comments[0].favorites);
+
         CommentDataController.updateComments(comments);
       });
       // }
@@ -78,7 +82,7 @@ export class DOMHandler {
 
         counterNumberComment.innerHTML = `${element.like}`;
 
-        console.log(comments[0].like, comments[0].favorites);
+
         CommentDataController.updateComments(comments);
 
         // Обновление счетчика лайков в реальном времени

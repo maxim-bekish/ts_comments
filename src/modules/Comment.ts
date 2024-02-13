@@ -1,6 +1,7 @@
 import heart_2 from "./../assets/svg/heart-2.svg";
 import share from "./../assets/svg/share.svg";
 import answerButton from "./../assets/svg/share.svg";
+import { Answer } from "./Answer";
 import { CommentData, AnswerData } from "./types";
 export class GenerationHTMLElementsComments {
   firstName: string;
@@ -16,6 +17,7 @@ export class GenerationHTMLElementsComments {
   like: number;
   favorites: boolean;
   answer?: AnswerData[];
+
   constructor(data: CommentData) {
     this.firstName = data.firstName;
     this.lastName = data.lastName;
@@ -31,9 +33,30 @@ export class GenerationHTMLElementsComments {
     this.favorites = data.favorites;
   }
 
+  handelAnswer(id: string): void {
+
+    
+    // const wrapperAnswer = document.getElementById(`wrapperAnswer${id}`);
+    // const buttonAnswer = document.getElementById(`answerButton${id}`); // buttonAnswer - кнопка "ответить"
+
+    // debugger
+    // const inputAnswer = document.createElement("input");
+    // const buttonAddAnswer = document.createElement("button"); //кнопка добавления комментария;
+    // inputAnswer.type = "text";
+    // buttonAddAnswer.innerHTML = "submit";
+
+    // buttonAnswer.addEventListener("click", () => {
+    //   wrapperAnswer.append(inputAnswer);
+    //   wrapperAnswer.append(buttonAddAnswer);
+    //   buttonAddAnswer.style.display = "block";
+    //   inputAnswer.style.display = "block";
+    //   inputAnswer.value = "";
+    // });
+    console.log(id);
+  }
+
   generateHTML(): string {
     // Генерация HTML для ответов
-
     return `
     <div id="comment${this.id}"  class="comment">
       <div class="comment_avatar avatar">
@@ -50,7 +73,7 @@ export class GenerationHTMLElementsComments {
           ${this.text}
         </div>
         <div class="comment_body_footer">
-          <div id="answerButton${this.id}">
+          <div  id="answerButton${this.id}">
             <img src="${answerButton}" />
             <span> Ответ</span>
           </div>
@@ -67,7 +90,9 @@ export class GenerationHTMLElementsComments {
           </div>
         </div>
       </div>
-    </div>`;
+    </div>
+    `
+    
   }
 }
 export class GenerationHTMLElementsAnswer extends GenerationHTMLElementsComments {
