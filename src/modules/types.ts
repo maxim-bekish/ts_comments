@@ -30,15 +30,9 @@ export interface AnswerData {
   favorites: boolean;
 }
 
-// export interface UserData {
-//   results: {
-//     name: {
-//       first: string;
-//       last: string;
-//       title: string;
-//     };
-//     picture: {
-//       large: string;
-//     };
-//   }[];
-// }
+export interface UserData {
+  first: string;
+  last: string;
+  title: string;
+  img: string;
+}

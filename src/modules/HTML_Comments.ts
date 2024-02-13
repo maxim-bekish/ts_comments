@@ -34,7 +34,7 @@ export class HTML_Comments {
   generateHTML(): string {
     // Генерация HTML для ответов
     return `
-    <div id="comment${this.id}"  class="comment">
+
       <div class="comment_avatar avatar">
         <img src='${this.img}' alt="avatar" />
       </div>
@@ -50,8 +50,8 @@ export class HTML_Comments {
         </div>
         <div class="comment_body_footer">
           <div  id="answerButton${this.id}">
-            <img src="${answerButton}" />
-            <span> Ответ</span>
+            <img id="answerButton${this.id}" src="${answerButton}" />
+            <span id="answerButton${this.id}" > Ответ</span>
           </div>
           <div id="favorites${this.id}" >
             <img src="${heart_2}" />
@@ -66,7 +66,7 @@ export class HTML_Comments {
           </div>
         </div>
       </div>
-    </div>
+    
     `;
   }
 }
