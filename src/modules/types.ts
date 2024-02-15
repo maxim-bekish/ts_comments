@@ -1,4 +1,6 @@
 export interface CommentData {
+  firstNameComment?: string;
+  lastNameComment?: string;
   firstName: string | any;
   lastName: string;
   title: string;
@@ -15,6 +17,8 @@ export interface CommentData {
 }
 
 export interface AnswerData {
+  firstNameComment:string,
+  lastNameComment:string,
   firstName: string;
   lastName: string;
   title: string;

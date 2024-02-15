@@ -26,7 +26,7 @@ body {
     cursor: pointer;
 
     .selected-option {
-      white-space:nowrap;
+      white-space: nowrap;
       text-decoration: underline;
       display: block;
       font-family: "Inter";
@@ -63,23 +63,6 @@ body {
       }
     }
   }
-  // .menu_filter {
-  //   display: flex;
-  //   align-items: center;
-  //   gap: 5px;
-  //   :nth-child(1) {
-  //     text-decoration: underline;
-  //     font-size: 16px;
-  //     font-weight: 400;
-  //     line-height: 19px;
-  //     letter-spacing: 0em;
-  //     opacity: 40%;
-  //   }
-  //   :nth-child(2) {
-  //     font-size: 27px;
-  //     opacity: 40%;
-  //   }
-  // }
   .menu_favorites {
     text-decoration: underline;
     font-size: 16px;
@@ -172,6 +155,10 @@ body {
           line-height: 1.0625rem;
           opacity: 40%;
         }
+        .answerInComment{
+           font-size: 1.125rem;
+           
+        }
       }
       .comment_body_main {
         font-size: 1.125rem;
@@ -199,7 +186,7 @@ body {
       }
     }
   }
-  .allAnswers{
+  .allAnswers {
     display: flex;
     flex-direction: column;
     gap: 10px;
@@ -220,6 +207,7 @@ body {
         align-items: center;
         :nth-child(3) {
           opacity: 40%;
+         
         }
         :nth-child(4) {
           font-size: 0.875rem;

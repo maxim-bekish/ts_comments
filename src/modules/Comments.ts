@@ -26,6 +26,7 @@ export class Comments {
       minutes: new Date().getMinutes(),
       id: crypto.randomUUID(),
       answers: [],
+      
     };
     const comments: CommentData[] = JSON.parse(localStorage.getItem("comments"))
       ? JSON.parse(localStorage.getItem("comments"))
@@ -43,23 +44,27 @@ export class Comments {
       img: string;
     },
     text: string,
-    idComment: string
-  ): void {
-    const newAnswer: AnswerData = {
-      firstName: newData.first,
-      lastName: newData.last,
-      title: newData.title,
-      img: newData.img,
-      like: 0,
-      favorites: false,
-      text: text,
-      month: new Date().getMonth() + 1,
-      day: new Date().getDate(),
-      hours: new Date().getHours(),
-      minutes: new Date().getMinutes(),
-      id: crypto.randomUUID(),
-      idComment: idComment,
-    };
+    idComment: string,
+    firstName:string,
+    lastName:string,
+    ): void {
+      const newAnswer: AnswerData = {
+        firstNameComment: firstName,
+        lastNameComment: lastName,
+        firstName: newData.first,
+        lastName: newData.last,
+        title: newData.title,
+        img: newData.img,
+        like: 0,
+        favorites: false,
+        text: text,
+        month: new Date().getMonth() + 1,
+        day: new Date().getDate(),
+        hours: new Date().getHours(),
+        minutes: new Date().getMinutes(),
+        id: crypto.randomUUID(),
+        idComment: idComment,
+      };
     const comments: CommentData[] = JSON.parse(
       localStorage.getItem("comments")
     );
@@ -67,9 +72,8 @@ export class Comments {
       if (el.id === idComment) {
         el.answers.push(newAnswer);
         let htmlAnswer = new HTML_Comments(
-          newAnswer,
-          el.firstName,
-          el.lastName
+          newAnswer
+      
         ).generateHTMLAnswer();
         DOMHandler.addAnswerInDOM(htmlAnswer, newAnswer);
       }

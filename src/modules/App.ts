@@ -1,22 +1,24 @@
+import { Favorites } from "./../mod/Favorites";
 import { UserDataFetcher } from "./UserDataFetcher";
+
 import { Comments } from "./Comments";
 import { HTML_Comments } from "./HTML_Comments";
-import { CommentData, UserData } from "./types";
+import { AnswerData, CommentData, UserData } from "./types";
 import { DOMHandler } from "./DOMHandler";
 export class App {
   private div__avatar_ID: HTMLElement;
-  private img__avatarID_Img: HTMLImageElement | null;
-  private h3__user: HTMLElement | null;
-  private textarea__textarea: HTMLTextAreaElement | null;
-  private submit__submit: HTMLButtonElement | null;
+  private img__avatarID_Img: HTMLImageElement;
+  private h3__user: HTMLElement;
+  private textarea__textarea: HTMLTextAreaElement;
+  private submit__submit: HTMLButtonElement;
   private newData: UserData;
   constructor() {
     this.div__avatar_ID = document.getElementById("avatarID");
+    this.img__avatarID_Img = document.createElement("img");
     this.h3__user = document.getElementById("user");
     this.submit__submit = document.getElementById(
       "submit"
     ) as HTMLButtonElement;
-    this.img__avatarID_Img = document.createElement("img");
     this.textarea__textarea = document.getElementById(
       "textarea"
     ) as HTMLTextAreaElement;
@@ -24,17 +26,20 @@ export class App {
 
   start(): void {
     this.addNewUser(); // создается новый пользователь
-    this.allCommentsAndAnswer(); // отрисовка всех комментариев
-    this.setupCommentEvents(); // отрисовка всех комментариев
+    this.allCommentsAndAnswer(); // отрисовка всех комментариев и ответов
+    this.render(); // отрисовка всех комментариев
+    this.favoritesClick(); // добавление флага и добавление в избранные
   }
 
-  async addNewUser(): Promise<any> {
-    const userData = await UserDataFetcher.fetchUserData();
-
-    this.newData = this.processUserData(userData);
-    // this.setupCommentEvents(newData);
-    this.presentUser(this.newData); // отрисовка нынешнего юзер
-    this.setupCommentSubmission(this.newData);
+  async addNewUser(): Promise<void> {
+    try {
+      const userData = await UserDataFetcher.fetchUserData();
+      this.newData = this.processUserData(userData);
+      this.renderUser(this.newData); // отрисовка нынешнего юзер
+      this.setupCommentSubmission(this.newData);
+    } catch (error) {
+      console.error("Error while fetching user data:", error);
+    }
   }
   private processUserData(userData: any): UserData {
     const data = {
@@ -46,7 +51,7 @@ export class App {
     return data;
   }
 
-  private presentUser(newData: UserData): void {
+  private renderUser(newData: UserData): void {
     this.img__avatarID_Img.id = "imgUser";
     this.img__avatarID_Img.className = "imgUser";
     this.img__avatarID_Img.src = newData.img;
@@ -68,27 +73,110 @@ export class App {
     });
   }
 
-  setupCommentEvents(): void {
+  private favoritesClick(): void {
+    document
+      .getElementById("menu_favorites")
+      .addEventListener("click", () => this.menu_favorites());
+  }
+
+  render(): void {
     const allCommentsContainer = document.getElementById("allComments");
- 
     allCommentsContainer.addEventListener("click", (event) => {
       const target = event.target as HTMLElement;
-      if (target && target.id.startsWith("answerButton")) {
-        const commentId = target.id.replace("answerButton", "");
-   const allAnswers = document.createElement(`allAnswer${commentId}`);
-        const wrapperForm = document.createElement("div");
-        const input = document.createElement("input");
-        const button = document.createElement("button");
-        button.innerText = "Отправить";
+      let allCommentsFromLocalStorage = JSON.parse(
+        localStorage.getItem("comments")
+      );
+      if (target) {
+        if (target.id.startsWith("answerButton")) {
+          const commentId = target.id.replace("answerButton", "");
+          const allAnswers = document.createElement(`allAnswer${commentId}`);
+          const wrapperForm = document.createElement("div");
+          const input = document.createElement("input");
+          const button = document.createElement("button");
+          button.innerText = "Отправить";
+          wrapperForm.append(input, button);
+          this.replyToComment(commentId, allAnswers, wrapperForm);
+          this.addNewAnswer(
+            button,
+            input,
+            commentId,
+            allCommentsFromLocalStorage
+          );
+        }
 
-        wrapperForm.append(input, button);
-
-        // тут мне нужно получить данные юзера , как мне это сделать?
-        this.replyToComment(commentId, allAnswers, wrapperForm);
-        this.addNewAnswer(button, input, commentId);
+        allCommentsFromLocalStorage.forEach((element: CommentData) => {
+          if (target.id.startsWith("favorites")) {
+            const commentId = target.id.replace("favorites", "");
+            this.answerFavorites(commentId, element);
+            localStorage.setItem(
+              "comments",
+              JSON.stringify(allCommentsFromLocalStorage)
+            );
+          }
+          if (target.id.startsWith("counterMinus")) {
+            const commentId = target.id.replace("counterMinus", "");
+            this.answerDislike(commentId, element);
+            localStorage.setItem(
+              "comments",
+              JSON.stringify(allCommentsFromLocalStorage)
+            );
+          }
+          if (target.id.startsWith("counterPlus")) {
+            const commentId = target.id.replace("counterPlus", "");
+            this.answerLike(commentId, element);
+            localStorage.setItem(
+              "comments",
+              JSON.stringify(allCommentsFromLocalStorage)
+            );
+          }
+          if (target.id.startsWith("favorites")) {
+            const commentId = target.id.replace("favorites", "");
+            this.favorites(commentId, element);
+            localStorage.setItem(
+              "comments",
+              JSON.stringify(allCommentsFromLocalStorage)
+            );
+          }
+          if (target.id.startsWith("counterMinus")) {
+            const commentId = target.id.replace("counterMinus", "");
+            this.dislike(commentId, element);
+            localStorage.setItem(
+              "comments",
+              JSON.stringify(allCommentsFromLocalStorage)
+            );
+          }
+          if (target.id.startsWith("counterPlus")) {
+            const commentId = target.id.replace("counterPlus", "");
+            this.like(commentId, element);
+            localStorage.setItem(
+              "comments",
+              JSON.stringify(allCommentsFromLocalStorage)
+            );
+          }
+        });
       }
     });
   }
+
+  favorites(id: string, comments: CommentData): void {
+   
+    let element = document.getElementById(`favorites${id}`);
+    if (id === comments.id) {
+      if (comments.favorites) {
+        comments.favorites = false;
+
+        DOMHandler.toggleFavorites(element, "Добавить в избранное");
+        return;
+      }
+      if (!comments.favorites) {
+        comments.favorites = true;
+        console.log(comments);
+        DOMHandler.toggleFavorites(element, "Удалить из избранного");
+        return;
+      }
+    }
+  }
+
   replyToComment(
     commentId: string,
     allAnswers: HTMLElement,
@@ -100,35 +188,128 @@ export class App {
 
     // Реализация логики добавления комментария в ответ на указанный комментарий
   }
+
+  answerFavorites(id: string, comments: CommentData): void {
+    let element = document.getElementById(`favorites${id}`);
+    comments.answers.forEach((elAnswer) => {
+      if (elAnswer.id === id) {
+        if (elAnswer.favorites) {
+          elAnswer.favorites = false;
+          DOMHandler.toggleFavorites(element, "Добавить в избранное");
+          return;
+        }
+        if (!elAnswer.favorites) {
+          elAnswer.favorites = true;
+          DOMHandler.toggleFavorites(element, "Удалить из избранного");
+          return;
+        }
+      }
+    });
+  }
+  answerDislike(id: string, comments: CommentData): void {
+    let number = document.getElementById(`counterNumber${id}`);
+    comments.answers.forEach((elAnswer) => {
+      if (elAnswer.id === id) {
+        elAnswer.like--;
+        DOMHandler.toggleLike(number, String(elAnswer.like));
+        return;
+      }
+    });
+  }
+  answerLike(id: string, comments: CommentData): void {
+    let number = document.getElementById(`counterNumber${id}`);
+    comments.answers.forEach((elAnswer) => {
+      if (elAnswer.id === id) {
+        elAnswer.like++;
+        DOMHandler.toggleLike(number, String(elAnswer.like));
+        return;
+      }
+    });
+  }
+
+  dislike(id: string, comments: CommentData): void {
+    let number = document.getElementById(`counterNumber${id}`);
+
+    if (comments.id === id) {
+      comments.like--;
+      DOMHandler.toggleLike(number, String(comments.like));
+      return;
+    }
+  }
+  like(id: string, comments: CommentData): void {
+    let number = document.getElementById(`counterNumber${id}`);
+
+    if (comments.id === id) {
+      comments.like++;
+      DOMHandler.toggleLike(number, String(comments.like));
+      return;
+    }
+  }
+
   addNewAnswer(
     button: HTMLButtonElement,
     input: HTMLInputElement,
-    commentId: string
+    commentId: string,
+    allCommentsFromLocalStorage: CommentData[]
   ): void {
     button.addEventListener("click", () => {
-      const answer = document.createElement("div");
-      const user = new Comments();
-      user.newAnswer(this.newData, input.value, commentId);
+      const user = allCommentsFromLocalStorage.find(
+        (user2: CommentData) => user2.id === commentId
+      );
+
+      const addAnswer = new Comments();
+      addAnswer.newAnswer(
+        this.newData,
+        input.value,
+        commentId,
+        user.lastName,
+        user.firstName
+      );
     });
+  }
+
+  menu_favorites(): void {
+    if (JSON.parse(localStorage.getItem("isFav"))) {
+      localStorage.setItem("isFav", "false");
+    } else {
+      localStorage.setItem("isFav", "true");
+      const arrayComments = JSON.parse(localStorage.getItem("comments"));
+      const fav: any = [];
+      arrayComments.forEach((comment: any) => {
+        if (comment.favorites) {
+          const newComments = { ...comment, answers: [] }; // создаем новый объект с ответами
+          fav.push(newComments);
+        }
+
+        comment.answers.forEach((answers: AnswerData) => {
+          if (answers.favorites) {
+            fav.push(answers);
+          }
+        });
+      });
+      localStorage.setItem("sort", JSON.stringify(fav));
+    }
+    this.allCommentsAndAnswer();
   }
 
   allCommentsAndAnswer(): void {
     const allComments = JSON.parse(localStorage.getItem("comments"));
-
+    const isFav = JSON.parse(localStorage.getItem("isFav"));
+    const sort = JSON.parse(localStorage.getItem("sort"));
+    let x: any;
+    isFav ? (x = sort) : (x = allComments);
     if (allComments) {
-      allComments.forEach((element: CommentData) => {
+      document.getElementById("allComments").innerHTML = "";
+      x.forEach((element: CommentData) => {
         let htmlComment = new HTML_Comments(element).generateHTML();
         DOMHandler.addCommentInDOM(htmlComment, element);
-   
-        if (element.answers.length !== 0) {
-          element.answers.forEach((el) => {
-            let htmlAnswer = new HTML_Comments(
-              el,
-              element.firstName,
-              element.lastName
-            ).generateHTMLAnswer();
-            DOMHandler.addAnswerInDOM(htmlAnswer, el);
-          });
+        if (element.answers) {
+          if (element.answers.length !== 0) {
+            element.answers.forEach((el) => {
+              let htmlAnswer = new HTML_Comments(el).generateHTMLAnswer();
+              DOMHandler.addAnswerInDOM(htmlAnswer, el);
+            });
+          }
         }
       });
     }

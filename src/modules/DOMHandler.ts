@@ -27,4 +27,10 @@ export class DOMHandler {
     answer.innerHTML = answerElement;
     allAnswers.append(answer);
   }
+  static toggleFavorites(element: HTMLElement, text: string): void {
+    element.innerText = text;
+  }
+  static toggleLike(element: HTMLElement, text: string): void {
+    element.innerText = text;
+  }
 }
