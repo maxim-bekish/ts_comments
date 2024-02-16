@@ -1,4 +1,4 @@
-import { CommentDataController } from "./CommentDataController";
+import { CommentDataController } from "../mod/CommentDataController";
 
 export class CustomSelect {
   private customSelect: HTMLDivElement;

@@ -22,7 +22,7 @@ export class DOMHandler {
   static addAnswerInDOM(answerElement: string, el: AnswerData): void {
     const allAnswers = document.getElementById(`allAnswers${el.idComment}`);
     const answer = document.createElement("div");
-    answer.id = el.id;
+    answer.id = `answer${el.id}`;
     answer.className = "answer";
     answer.innerHTML = answerElement;
     allAnswers.append(answer);
@@ -32,5 +32,9 @@ export class DOMHandler {
   }
   static toggleLike(element: HTMLElement, text: string): void {
     element.innerText = text;
+  }
+
+  static counterComments(num: number): void {
+    document.getElementById("countComments").innerText = `(${String(num)})`
   }
 }

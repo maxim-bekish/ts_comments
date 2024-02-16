@@ -1,10 +1,9 @@
-import { Favorites } from "./../mod/Favorites";
 import { UserDataFetcher } from "./UserDataFetcher";
-
 import { Comments } from "./Comments";
 import { HTML_Comments } from "./HTML_Comments";
 import { AnswerData, CommentData, UserData } from "./types";
 import { DOMHandler } from "./DOMHandler";
+import { CustomSelect } from "./Filter";
 export class App {
   private div__avatar_ID: HTMLElement;
   private img__avatarID_Img: HTMLImageElement;
@@ -25,10 +24,12 @@ export class App {
   }
 
   start(): void {
+    // this.counterComments()
+    this.render(); // отрисовка всех комментариев
     this.addNewUser(); // создается новый пользователь
     this.allCommentsAndAnswer(); // отрисовка всех комментариев и ответов
-    this.render(); // отрисовка всех комментариев
     this.favoritesClick(); // добавление флага и добавление в избранные
+    this.setupEventListeners(); // фильтр
   }
 
   async addNewUser(): Promise<void> {
@@ -81,15 +82,17 @@ export class App {
 
   render(): void {
     const allCommentsContainer = document.getElementById("allComments");
+
     allCommentsContainer.addEventListener("click", (event) => {
       const target = event.target as HTMLElement;
       let allCommentsFromLocalStorage = JSON.parse(
         localStorage.getItem("comments")
       );
+    
       if (target) {
         if (target.id.startsWith("answerButton")) {
           const commentId = target.id.replace("answerButton", "");
-          const allAnswers = document.createElement(`allAnswer${commentId}`);
+          const allAnswers = document.createElement(`div`);
           const wrapperForm = document.createElement("div");
           const input = document.createElement("input");
           const button = document.createElement("button");
@@ -100,7 +103,8 @@ export class App {
             button,
             input,
             commentId,
-            allCommentsFromLocalStorage
+            allCommentsFromLocalStorage,
+            wrapperForm
           );
         }
 
@@ -159,7 +163,6 @@ export class App {
   }
 
   favorites(id: string, comments: CommentData): void {
-   
     let element = document.getElementById(`favorites${id}`);
     if (id === comments.id) {
       if (comments.favorites) {
@@ -183,8 +186,7 @@ export class App {
     wrapperForm: HTMLElement
   ): void {
     allAnswers.id = `allAnswers${commentId}`;
-    document.getElementById(`commentWrapper${commentId}`).append(allAnswers);
-    allAnswers.append(wrapperForm);
+    document.getElementById(`commentWrapper${commentId}`).append(wrapperForm);
 
     // Реализация логики добавления комментария в ответ на указанный комментарий
   }
@@ -250,9 +252,11 @@ export class App {
     button: HTMLButtonElement,
     input: HTMLInputElement,
     commentId: string,
-    allCommentsFromLocalStorage: CommentData[]
+    allCommentsFromLocalStorage: CommentData[],
+    wrapperForm: HTMLElement
   ): void {
     button.addEventListener("click", () => {
+      wrapperForm.remove();
       const user = allCommentsFromLocalStorage.find(
         (user2: CommentData) => user2.id === commentId
       );
@@ -292,13 +296,67 @@ export class App {
     this.allCommentsAndAnswer();
   }
 
+  setupEventListeners() {
+    const customSelect = document.querySelector(
+      ".custom-select"
+    ) as HTMLDivElement;
+    const selectedOption = customSelect.querySelector(
+      ".selected-option"
+    ) as HTMLSpanElement;
+    const optionsList = customSelect.querySelector(
+      ".options-list"
+    ) as HTMLUListElement;
+
+    customSelect.addEventListener("click", () => {
+      optionsList.style.display === "block"
+        ? (optionsList.style.display = "none")
+        : (optionsList.style.display = "block");
+    });
+
+    optionsList.addEventListener("click", (event) => {
+      const target = event.target as HTMLLIElement;
+
+      if (target.tagName === "LI") {
+        localStorage.setItem("filter", target.attributes[0].value);
+
+        selectedOption.textContent = target.textContent || ""; // Скрываем список после выбора опции
+
+        this.allCommentsAndAnswer();
+      }
+    });
+
+    document.addEventListener("click", (event) => {
+      const target = event.target as HTMLElement;
+      if (!customSelect.contains(target)) {
+        optionsList.style.display = "none";
+      }
+    });
+  }
+
   allCommentsAndAnswer(): void {
     const allComments = JSON.parse(localStorage.getItem("comments"));
     const isFav = JSON.parse(localStorage.getItem("isFav"));
     const sort = JSON.parse(localStorage.getItem("sort"));
+    const filter = localStorage.getItem("filter");
+
+  DOMHandler.counterComments(allComments.length);
     let x: any;
     isFav ? (x = sort) : (x = allComments);
     if (allComments) {
+      switch (filter) {
+        case "option1":
+          break;
+        case "option2":
+          x.sort((a: CommentData, b: CommentData) => a.like - b.like);
+          break;
+        case "option3":
+          x.sort(
+            (a: CommentData, b: CommentData) =>
+              a.answers.length - b.answers.length
+          );
+          break;
+      }
+
       document.getElementById("allComments").innerHTML = "";
       x.forEach((element: CommentData) => {
         let htmlComment = new HTML_Comments(element).generateHTML();

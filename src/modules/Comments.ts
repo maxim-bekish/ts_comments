@@ -35,6 +35,8 @@ export class Comments {
     localStorage.setItem("comments", JSON.stringify(comments));
     let htmlComment = new HTML_Comments(newComment).generateHTML();
     DOMHandler.addCommentInDOM(htmlComment, newComment);
+    DOMHandler.counterComments(comments.length);
+
   }
   newAnswer(
     newData: {
@@ -76,6 +78,7 @@ export class Comments {
       
         ).generateHTMLAnswer();
         DOMHandler.addAnswerInDOM(htmlAnswer, newAnswer);
+        
       }
     });
 
