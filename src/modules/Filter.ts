@@ -3,13 +3,13 @@ import { Render } from "./Render";
 export class Filter {
   static setupEventListeners() {
     const customSelect = document.querySelector(
-      ".menu_filter_custom-select"
+      ".navigation__filter-custom-select"
     ) as HTMLDivElement;
     const selectedOption = customSelect.querySelector(
-      ".selected-option"
+      ".navigation__filter-selected-option"
     ) as HTMLSpanElement;
     const optionsList = customSelect.querySelector(
-      ".options-list"
+      ".navigation__filter-options-list"
     ) as HTMLUListElement;
 
     customSelect.addEventListener("click", () => {

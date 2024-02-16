@@ -45,9 +45,7 @@ export class App {
 
   private processUserData(userData: any): UserData {
     const data = {
-      title: userData.results[0].name.title,
       first: userData.results[0].name.first,
-      last: userData.results[0].name.last,
       img: userData.results[0].picture.large,
     };
     return data;
@@ -57,7 +55,7 @@ export class App {
     this.img__avatarID_Img.id = "imgUser";
     this.img__avatarID_Img.className = "imgUser";
     this.img__avatarID_Img.src = newData.img;
-    this.h3__user.innerText = `${newData.title} ${newData.first} ${newData.last} `;
+    this.h3__user.innerText = `${newData.first}`;
     this.div__avatar_ID.append(this.img__avatarID_Img);
   }
 
@@ -197,46 +195,41 @@ export class App {
         (user2: CommentData) => user2.id === commentId
       );
 
-      Comments.newAnswer(
-        this.newData,
-        input.value,
-        commentId,
-        user.lastName,
-        user.firstName
-      );
+      Comments.newAnswer(this.newData, input.value, commentId, user.firstName);
     });
   }
 
   favorites(id: string, comments: CommentData): void {
     let element = document.getElementById(`favorites${id}`);
+    let elementFmg = document.getElementById(
+      `imgFavorites${id}`
+    ) as HTMLImageElement;
     if (id === comments.id) {
       if (comments.favorites) {
         comments.favorites = false;
-
-        DOMHandler.toggleFavorites(element, "Добавить в избранное");
+        DOMHandler.toggleFavorites(element, elementFmg, false);
         return;
       }
       if (!comments.favorites) {
         comments.favorites = true;
-        console.log(comments);
-        DOMHandler.toggleFavorites(element, "Удалить из избранного");
+        DOMHandler.toggleFavorites(element, elementFmg, true);
         return;
       }
     }
   }
-
   answerFavorites(id: string, comments: CommentData): void {
     let element = document.getElementById(`favorites${id}`);
+    let elementFmg = document.getElementById(`imgFavorites${id}`) as HTMLImageElement;
     comments.answers.forEach((elAnswer) => {
       if (elAnswer.id === id) {
         if (elAnswer.favorites) {
           elAnswer.favorites = false;
-          DOMHandler.toggleFavorites(element, "Добавить в избранное");
+          DOMHandler.toggleFavorites(element, elementFmg, false);
           return;
         }
         if (!elAnswer.favorites) {
           elAnswer.favorites = true;
-          DOMHandler.toggleFavorites(element, "Удалить из избранного");
+          DOMHandler.toggleFavorites(element, elementFmg, true);
           return;
         }
       }

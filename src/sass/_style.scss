@@ -1,18 +1,21 @@
 @mixin button {
-  font-size: 1.125rem;
-  line-height: 1.375rem;
+  font-size: $px18;
+  line-height: 22px;
   outline: none;
   border: 0;
   box-sizing: border-box;
   width: 213px;
   height: 61px;
   border-radius: 5px;
-  background-color: #abd873;
+  background-color: rgb(171, 216, 115);
+  &:disabled {
+    background-color: rgb(161, 161, 161);
+  }
 }
 @mixin input {
   resize: none;
-  font-size: 1.125rem;
-  line-height: 1.375rem;
+  font-size: $px18;
+  line-height: 22px;
   padding: 20px 20px 20px 30px;
   width: 100%;
   height: 61px;
@@ -25,49 +28,53 @@
   outline: none;
   box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
 }
-.container {
+
+$px18: 18px;
+$px14: 14px;
+$o40: 40%;
+.content {
   width: 1050px;
   margin: 0 auto;
   font-family: "Inter";
 }
 
-.menu {
+.navigation {
   margin: 25px 0 32px 0;
   display: flex;
   align-items: center;
   justify-content: flex-start;
   gap: 50px;
-  .menu_comments {
+  .navigation__item--comments {
     padding-bottom: 3px;
-    border-bottom: 3px solid black;
-    font-size: 1.25rem;
+    border-bottom: 3px solid rgb(0, 0, 0);
+    font-size: $px18;
     font-weight: 500;
-    line-height: 1.5rem;
+    line-height: 24px;
 
     :nth-child(2) {
-      opacity: 40%;
+      opacity: $o40;
     }
   }
-  .menu_filter {
+  .navigation__item--filter {
     display: flex;
-    .menu_filter_custom-select {
+    .navigation__filter-custom-select {
       position: relative;
       width: 200px;
       cursor: pointer;
       display: flex;
       align-items: center;
-      .selected-option {
+      .navigation__filter-selected-option {
         white-space: nowrap;
         text-decoration: underline;
         display: block;
         font-family: "Inter";
         padding: 10px;
-        font-size: 18px;
-        opacity: 40%;
-        line-height: 1.1875rem;
+        font-size: $px18;
+        opacity: $o40;
+        line-height: 19px;
       }
 
-      .options-list {
+      .navigation__filter-options-list {
         border-radius: 5px;
         list-style: none;
         padding: 0;
@@ -77,26 +84,26 @@
         left: 0;
         width: 100%;
         z-index: 3;
-        background-color: #fff;
-        box-shadow: 0 0px 10px #0000001a;
+        background-color: rgb(255, 255, 255);
+        box-shadow: 0 0px 10px rgba(0, 0, 0, 0.102);
         display: none;
 
         li {
           font-family: "Inter";
           padding: 10px;
-          font-size: 1rem;
-          opacity: 40%;
-          line-height: 1.1875rem;
+          font-size: $px18;
+          opacity: $o40;
+          line-height: 19px;
 
           &:hover {
-            background-color: #f2f2f2;
+            background-color: rgb(242, 242, 242);
           }
         }
       }
     }
-    .menu_filter_favorites {
+    .navigation__filter-favorites {
       text-decoration: underline;
-      font-size: 16px;
+      font-size: $px18;
       font-weight: 400;
       line-height: 19px;
       letter-spacing: 0em;
@@ -105,7 +112,7 @@
       align-items: center;
       gap: 5px;
       span {
-        opacity: 40%;
+        opacity: $o40;
       }
       img {
         width: 27px;
@@ -115,19 +122,19 @@
   }
 }
 //-----------------//-----------------//-----------------//
-.inputForm {
+.form {
   display: flex;
   gap: 30px;
-  .inputForm_main {
+  .form__content {
     display: flex;
     flex-direction: column;
     flex-grow: 1;
     gap: 15px;
     span {
-      font-size: 14px;
+      font-size: $px14;
       font-style: italic;
       line-height: 17px;
-      opacity: 40%;
+      opacity: $o40;
     }
     textarea {
       @include input;
@@ -137,7 +144,7 @@
       justify-content: space-between;
     }
   }
-  .inputForm_button {
+  .form__action {
     margin-top: 36px;
     button {
       @include button;
@@ -147,44 +154,48 @@
 }
 //-----------------//-----------------//-----------------//
 .commentForm {
-  gap: 25px;
+  gap: 30px;
   display: flex;
   flex-direction: column;
   margin-top: 40px;
   .comment {
     display: flex;
     gap: 30px;
-    .comment_body {
+    .comment__body {
       display: flex;
       flex-direction: column;
       gap: 15px;
-      .comment_body_header {
+      .comment__header {
         display: flex;
         gap: 15px;
         align-items: center;
 
         span {
-          font-size: 0.875rem;
-          line-height: 1.0625rem;
-          opacity: 40%;
+          font-size: $px14;
+          line-height: 17px;
+          opacity: $o40;
         }
-        .answerInComment {
-          font-size: 1.125rem;
+        .comment__reply {
+          font-size: $px18;
         }
       }
-      .comment_body_main {
-        font-size: 1.125rem;
-        line-height: 1.375rem;
+      .comment__content {
+        font-size: $px18;
+        line-height: 22px;
       }
-      .comment_body_footer {
+      .comment__footer {
         display: flex;
         gap: 20px;
+        .favorites {
+          min-width: 148px;
+        }
         :nth-child(1) {
           display: flex;
           align-items: center;
           gap: 10px;
+
           span {
-            opacity: 40%;
+            opacity: $o40;
           }
         }
         :nth-child(2) {
@@ -192,7 +203,7 @@
           display: flex;
           align-items: center;
           span {
-            opacity: 40%;
+            opacity: $o40;
           }
         }
       }
@@ -204,40 +215,50 @@
     gap: 10px;
   }
   .answer {
-    margin: 28px 0 28px 90px;
+    margin-left: 90px;
     display: flex;
     flex-direction: row;
     gap: 30px;
-    .answer_body {
+    .answer__body {
       display: flex;
       flex-direction: column;
       gap: 15px;
-      .answer_body_header {
+
+      .answer__header {
         display: flex;
         flex-direction: row;
         gap: 15px;
         align-items: center;
-        :nth-child(3) {
-          opacity: 40%;
+        div {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          span {
+            opacity: $o40;
+          }
         }
-        :nth-child(4) {
-          font-size: 0.875rem;
-          line-height: 1.0625rem;
-          opacity: 40%;
+        span {
+          font-size: $px14;
+          line-height: 17px;
+          opacity: $o40;
         }
       }
-      .answer_body_main {
-        font-size: 1.125rem;
-        line-height: 1.375rem;
+
+      .answer__content {
+        font-size: $px18;
+        line-height: 22px;
       }
-      .answer_body_footer {
+      .answer__footer {
         display: flex;
         gap: 30px;
+        .favorites {
+          min-width: 148px;
+        }
         :nth-child(1) {
           display: flex;
           gap: 7px;
           span {
-            opacity: 40%;
+            opacity: $o40;
           }
         }
       }
@@ -266,13 +287,13 @@
   }
 }
 h3 {
-  font-size: 1.125rem;
-  color: #122ac0;
+  font-size: $px18;
+  color: rgb(18, 42, 192);
   font-weight: 500;
-  line-height: 1.3613rem;
+  line-height: 22px;
 }
-.counter {
-  font-size: 18px;
+.likes {
+  font-size: $px18;
   font-weight: 500;
   line-height: 22px;
   display: flex;
@@ -285,11 +306,11 @@ h3 {
     border-radius: 50%;
     width: 20px;
     height: 20px;
-    color: red;
+    color: rgb(255, 0, 0);
     background-color: rgba(0, 0, 0, 0.1);
   }
   :nth-child(2) {
-    color: #abd873;
+    color: rgb(171, 216, 115);
   }
   :nth-child(3) {
     display: flex;
@@ -299,39 +320,42 @@ h3 {
     height: 20px;
     border-radius: 50%;
     background-color: rgba(0, 0, 0, 0.1);
-    color: #abd873;
+    color: rgb(171, 216, 115);
   }
 }
 @media (max-width: 420px) {
   body {
-    .container {
+    .avatar {
+      position: absolute;
+      img {
+        min-width: 50px;
+        height: 50px;
+      }
+    }
+    .content {
       width: 100%;
       max-width: 420px;
       padding: 0 10px;
-      .menu {
+      .navigation {
         margin: 15px 0;
         flex-wrap: wrap;
         gap: 10px;
-        .menu_comments {
-          span {
-          }
-        }
-        .menu_filter {
+        .navigation__item--filter {
           display: flex;
           justify-content: space-between;
           width: 100%;
-          .menu_filter_custom-select {
+          .navigation__filter-custom-select {
             span {
-              font-size: 14px;
+              font-size: $px14;
             }
             ul {
               li {
-                font-size: 14px;
+                font-size: $px14;
               }
             }
           }
-          .menu_filter_favorites {
-            font-size: 14px;
+          .navigation__filter-favorites {
+            font-size: $px14;
             img {
               width: 21px;
               height: 21px;
@@ -339,17 +363,12 @@ h3 {
           }
         }
       }
-      .inputForm {
-        gap: 0;
+      //-----------------//-----------------//-----------------//
+      .form {
+        gap: 10px;
         flex-direction: column;
-        .inputForm_avatar {
-          img {
-            min-width: 50px;
-            height: 50px;
-          }
-          position: absolute;
-        }
-        .inputForm_main {
+
+        .form__content {
           :nth-child(1) {
             margin-top: 7px;
             display: flex;
@@ -357,9 +376,88 @@ h3 {
             align-items: flex-end;
             row-gap: 10px;
             h3 {
+              padding-left: 70px;
               display: flex;
               width: 100%;
-              align-items: center;
+              align-items: flex-start;
+            }
+          }
+          :nth-child(2) {
+            textarea {
+              padding: 10px;
+            }
+          }
+        }
+        .form__action {
+          margin-top: 0px;
+          button {
+            width: 100%;
+          }
+        }
+      }
+      //-----------------//-----------------//-----------------//
+      .comments {
+        margin-top: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 40px;
+        .commentForm {
+          margin-top: 0px;
+          gap: 30px;
+          .comment {
+            flex-direction: column;
+            gap: 30px;
+            .comment__body {
+              .comment__header {
+                padding-left: 80px;
+                margin: 15px 0;
+                justify-content: space-between;
+              }
+              .comment__footer {
+                display: flex;
+                justify-content: space-between;
+              }
+            }
+          }
+          .allAnswers {
+            gap: 30px;
+            .answer {
+              margin: 0;
+              .answer__body {
+                width: 100%;
+                .answer__header {
+                  margin: 15px 0;
+                  padding-left: 80px;
+                  :nth-child(1) {
+                    display: flex;
+                    flex-wrap: wrap;
+                  }
+                }
+                .answer__footer {
+                  align-items: center;
+                  justify-content: space-between;
+                  div {
+                    img {
+                      width: 24px;
+                      height: 24px;
+                    }
+                  }
+                }
+              }
+            }
+          }
+          .wrapperForm {
+            max-width: 100%;
+            width: 100%;
+            margin: 0;
+            gap: 5px;
+            display: flex;
+            flex-direction: column;
+            button {
+              width: 100%;
+            }
+            textarea {
+              padding: 10px;
             }
           }
         }

@@ -1,5 +1,6 @@
 import { AnswerData, CommentData } from "./types";
-
+import heart from './../assets/svg/heart-2.svg'
+import heart_empty from './../assets/svg/heart_empty.svg'
 export class DOMHandler {
   static addCommentInDOM(commentElement: string, el: CommentData): void {
     let allComments = document.getElementById("allComments");
@@ -27,8 +28,18 @@ export class DOMHandler {
     answer.innerHTML = answerElement;
     allAnswers.append(answer);
   }
-  static toggleFavorites(element: HTMLElement, text: string): void {
-    element.innerText = text;
+  static toggleFavorites(
+    element: HTMLElement,
+    elementIMG: HTMLImageElement,
+    x: boolean
+  ): void {
+    if (x) {
+      element.innerText = "В избранном";
+      elementIMG.src = heart;
+    } else {
+      element.innerText = "В избранное";
+        elementIMG.src = heart_empty;
+    }
   }
   static toggleLike(element: HTMLElement, text: string): void {
     element.innerText = text;
@@ -36,5 +47,4 @@ export class DOMHandler {
   static counterComments(num: number): void {
     document.getElementById("countComments").innerText = `(${num})`;
   }
- 
 }

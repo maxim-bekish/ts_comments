@@ -6,16 +6,12 @@ export class Comments {
   static newUser(
     newData: {
       first: string;
-      last: string;
-      title: string;
       img: string;
     },
     text: string
   ): void {
     const newComment: CommentData = {
       firstName: newData.first,
-      lastName: newData.last,
-      title: newData.title,
       img: newData.img,
       like: 0,
       favorites: false,
@@ -39,21 +35,16 @@ export class Comments {
   static newAnswer(
     newData: {
       first: string;
-      last: string;
-      title: string;
       img: string;
     },
     text: string,
     idComment: string,
     firstName: string,
-    lastName: string
+
   ): void {
     const newAnswer: AnswerData = {
       firstNameComment: firstName,
-      lastNameComment: lastName,
       firstName: newData.first,
-      lastName: newData.last,
-      title: newData.title,
       img: newData.img,
       like: 0,
       favorites: false,
