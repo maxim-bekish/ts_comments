@@ -1,47 +1,39 @@
-import { CommentDataController } from "../mod/CommentDataController";
+import { Render } from "./Render";
 
-export class CustomSelect {
-  private customSelect: HTMLDivElement;
-  private selectedOption: HTMLSpanElement;
-  private optionsList: HTMLUListElement;
-
-  constructor() {
-    this.customSelect = document.querySelector(
-      ".custom-select"
+export class Filter {
+  static setupEventListeners() {
+    const customSelect = document.querySelector(
+      ".menu_filter_custom-select"
     ) as HTMLDivElement;
-    this.selectedOption = this.customSelect.querySelector(
+    const selectedOption = customSelect.querySelector(
       ".selected-option"
     ) as HTMLSpanElement;
-    this.optionsList = this.customSelect.querySelector(
+    const optionsList = customSelect.querySelector(
       ".options-list"
     ) as HTMLUListElement;
 
-    this.setupEventListeners();
-  }
-
-  private setupEventListeners() {
-    this.customSelect.addEventListener("click", () => {
-      this.optionsList.style.display =
-        this.optionsList.style.display === "block" ? "none" : "block";
+    customSelect.addEventListener("click", () => {
+      optionsList.style.display === "block"
+        ? (optionsList.style.display = "none")
+        : (optionsList.style.display = "block");
     });
 
-    this.optionsList.addEventListener("click", (event) => {
+    optionsList.addEventListener("click", (event) => {
       const target = event.target as HTMLLIElement;
 
       if (target.tagName === "LI") {
-        CommentDataController.updateFilter(target.attributes[0].value);
+        localStorage.setItem("filter", target.attributes[0].value);
 
-        this.selectedOption.textContent = target.textContent || ""; // Скрываем список после выбора опции
+        selectedOption.textContent = target.textContent || ""; // Скрываем список после выбора опции
 
-
-        
+        Render.allCommentsAndAnswer();
       }
     });
 
     document.addEventListener("click", (event) => {
       const target = event.target as HTMLElement;
-      if (!this.customSelect.contains(target)) {
-        this.optionsList.style.display = "none";
+      if (!customSelect.contains(target)) {
+        optionsList.style.display = "none";
       }
     });
   }

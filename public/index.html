@@ -16,19 +16,21 @@
       <nav class="menu">
         <div class="menu_comments">
           <span>Комментарии</span>
-          <span id="countComments">(0)</span>
+          <span id="countComments"></span>
         </div>
-        <div class="custom-select">
-          <span  class="selected-option">По дате</span>
-          <ul class="options-list">
-            <li id="option1">По дате</li>
-            <li id="option2">По количеству оценок</li>
-            <li id="option3">По количеству ответов</li>
-          </ul>
-        </div>
-        <div id="menu_favorites" class="menu_favorites">
-          <span>Избранное</span>
-          <!-- <img src="./../src/assets/svg/heart.svg" alt="" /> -->
+        <div class="menu_filter">
+          <div class="menu_filter_custom-select">
+            <span class="selected-option">По дате</span>
+            <ul class="options-list">
+              <li id="option1">По дате</li>
+              <li id="option2">По количеству оценок</li>
+              <li id="option3">По количеству ответов</li>
+            </ul>
+          </div>
+          <div id="menu_favorites" class="menu_filter_favorites">
+            <span>Избранное</span>
+            <img src="./../src/assets/svg/heart.svg" alt="" />
+          </div>
         </div>
       </nav>
       <div class="inputForm">
@@ -44,8 +46,7 @@
               class="inputForm_main_input"
               name=""
               id="textarea"
-              cols="30"
-              rows="10"
+              rows="1"
             ></textarea>
           </div>
         </div>
@@ -53,9 +54,7 @@
           <button disabled="false" id="submit">Отправить</button>
         </div>
       </div>
-      <div id="allComments" class="allcomments" >
-
-      </div>
+      <div id="allComments" class="allcomments"></div>
     </main>
   </body>
 </html>

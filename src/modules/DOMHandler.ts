@@ -33,8 +33,8 @@ export class DOMHandler {
   static toggleLike(element: HTMLElement, text: string): void {
     element.innerText = text;
   }
-
   static counterComments(num: number): void {
-    document.getElementById("countComments").innerText = `(${String(num)})`
+    document.getElementById("countComments").innerText = `(${num})`;
   }
+ 
 }

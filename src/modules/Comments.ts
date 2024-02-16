@@ -3,7 +3,7 @@ import { HTML_Comments } from "./HTML_Comments";
 import { AnswerData, CommentData } from "./types";
 
 export class Comments {
-  newUser(
+  static newUser(
     newData: {
       first: string;
       last: string;
@@ -26,7 +26,6 @@ export class Comments {
       minutes: new Date().getMinutes(),
       id: crypto.randomUUID(),
       answers: [],
-      
     };
     const comments: CommentData[] = JSON.parse(localStorage.getItem("comments"))
       ? JSON.parse(localStorage.getItem("comments"))
@@ -36,9 +35,8 @@ export class Comments {
     let htmlComment = new HTML_Comments(newComment).generateHTML();
     DOMHandler.addCommentInDOM(htmlComment, newComment);
     DOMHandler.counterComments(comments.length);
-
   }
-  newAnswer(
+  static newAnswer(
     newData: {
       first: string;
       last: string;
@@ -47,38 +45,34 @@ export class Comments {
     },
     text: string,
     idComment: string,
-    firstName:string,
-    lastName:string,
-    ): void {
-      const newAnswer: AnswerData = {
-        firstNameComment: firstName,
-        lastNameComment: lastName,
-        firstName: newData.first,
-        lastName: newData.last,
-        title: newData.title,
-        img: newData.img,
-        like: 0,
-        favorites: false,
-        text: text,
-        month: new Date().getMonth() + 1,
-        day: new Date().getDate(),
-        hours: new Date().getHours(),
-        minutes: new Date().getMinutes(),
-        id: crypto.randomUUID(),
-        idComment: idComment,
-      };
+    firstName: string,
+    lastName: string
+  ): void {
+    const newAnswer: AnswerData = {
+      firstNameComment: firstName,
+      lastNameComment: lastName,
+      firstName: newData.first,
+      lastName: newData.last,
+      title: newData.title,
+      img: newData.img,
+      like: 0,
+      favorites: false,
+      text: text,
+      month: new Date().getMonth() + 1,
+      day: new Date().getDate(),
+      hours: new Date().getHours(),
+      minutes: new Date().getMinutes(),
+      id: crypto.randomUUID(),
+      idComment: idComment,
+    };
     const comments: CommentData[] = JSON.parse(
       localStorage.getItem("comments")
     );
     comments.forEach((el) => {
       if (el.id === idComment) {
         el.answers.push(newAnswer);
-        let htmlAnswer = new HTML_Comments(
-          newAnswer
-      
-        ).generateHTMLAnswer();
+        let htmlAnswer = new HTML_Comments(newAnswer).generateHTMLAnswer();
         DOMHandler.addAnswerInDOM(htmlAnswer, newAnswer);
-        
       }
     });
 
