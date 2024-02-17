@@ -50,7 +50,6 @@ export class App {
     };
     return data;
   }
-
   private renderUser(newData: UserData): void {
     this.img__avatarID_Img.id = "imgUser";
     this.img__avatarID_Img.className = "imgUser";

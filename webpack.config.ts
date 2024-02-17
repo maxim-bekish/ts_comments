@@ -18,5 +18,10 @@ export default (evn: EvnVariables) => {
     mode: evn.mode ?? "development",
     paths,
   });
+
+    config.output = {
+      ...config.output,
+      publicPath: "/",
+    };
   return config;
 };
