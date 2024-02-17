@@ -161,11 +161,13 @@ export class App {
     const input = document.createElement("textarea");
     input.rows = 1;
     const button = document.createElement("button");
+    const buttonClosed = document.createElement("button");
     wrapperForm.className = "wrapperForm";
     wrapperForm.id = "wrapperForm";
     button.innerText = "Отправить";
+    buttonClosed.innerText = "Закрыть";
     button.disabled = true;
-    wrapperForm.append(input, button);
+    wrapperForm.append(input, button, buttonClosed);
 
     allAnswers.id = `allAnswers${commentId}`;
     document.getElementById(`commentWrapper${commentId}`).append(wrapperForm);
@@ -173,6 +175,7 @@ export class App {
     this.addNewAnswer(
       button,
       input,
+      buttonClosed,
       commentId,
       allCommentsFromLocalStorage,
       wrapperForm
@@ -182,12 +185,13 @@ export class App {
   addNewAnswer(
     button: HTMLButtonElement,
     input: HTMLTextAreaElement,
+    buttonClosed:HTMLButtonElement,
     commentId: string,
     allCommentsFromLocalStorage: CommentData[],
     wrapperForm: HTMLElement
   ): void {
     validInput(input, button, false);
-
+buttonClosed.addEventListener('click',()=>  wrapperForm.remove())
     button.addEventListener("click", () => {
       wrapperForm.remove();
       const user = allCommentsFromLocalStorage.find(
