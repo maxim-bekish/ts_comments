@@ -28,12 +28,20 @@
   outline: none;
   box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
 }
-
 $px18: 18px;
 $px14: 14px;
 $o40: 40%;
+
+.content-title {
+  font-size: $px18;
+  color: rgb(18, 42, 192);
+  font-weight: 500;
+  line-height: 22px;
+}
+
 .content {
-  width: 1050px;
+  width: 100%;
+  max-width: 1050px;
   margin: 0 auto;
   font-family: "Inter";
 }
@@ -165,20 +173,26 @@ $o40: 40%;
       display: flex;
       flex-direction: column;
       gap: 15px;
+
       .comment__header {
         display: flex;
         gap: 15px;
         align-items: center;
 
-        span {
+        .comment__author {
+        }
+        .comment__timestamp {
           font-size: $px14;
           line-height: 17px;
           opacity: $o40;
         }
+
         .comment__reply {
           font-size: $px18;
+          border: 1px solid black;
         }
       }
+
       .comment__content {
         font-size: $px18;
         line-height: 22px;
@@ -189,21 +203,18 @@ $o40: 40%;
         .favorites {
           min-width: 148px;
         }
-        :nth-child(1) {
+        .comment__reply-button,
+        .comment__favorites,
+        .comment__likes {
           display: flex;
           align-items: center;
           gap: 10px;
-
           span {
+            cursor: pointer;
             opacity: $o40;
           }
-        }
-        :nth-child(2) {
-          gap: 10px;
-          display: flex;
-          align-items: center;
-          span {
-            opacity: $o40;
+          .comment__like-button {
+            cursor: pointer;
           }
         }
       }
@@ -212,7 +223,7 @@ $o40: 40%;
   .allAnswers {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 30px;
   }
   .answer {
     margin-left: 90px;
@@ -233,7 +244,7 @@ $o40: 40%;
           display: flex;
           align-items: center;
           gap: 10px;
-          span {
+          .answer__comment {
             opacity: $o40;
           }
         }
@@ -250,15 +261,22 @@ $o40: 40%;
       }
       .answer__footer {
         display: flex;
-        gap: 30px;
+        gap: 20px;
         .favorites {
           min-width: 148px;
         }
-        :nth-child(1) {
+        .answer__favorites,
+        .answer__likes {
           display: flex;
-          gap: 7px;
+          align-items: center;
+          gap: 10px;
+
           span {
+            cursor: pointer;
             opacity: $o40;
+          }
+          .answer__like-button {
+            cursor: pointer;
           }
         }
       }
@@ -286,12 +304,7 @@ $o40: 40%;
     border-radius: 50%;
   }
 }
-h3 {
-  font-size: $px18;
-  color: rgb(18, 42, 192);
-  font-weight: 500;
-  line-height: 22px;
-}
+
 .likes {
   font-size: $px18;
   font-weight: 500;
@@ -323,7 +336,7 @@ h3 {
     color: rgb(171, 216, 115);
   }
 }
-@media (max-width: 420px) {
+@media (max-width: 600px) {
   body {
     .avatar {
       position: absolute;
@@ -333,8 +346,6 @@ h3 {
       }
     }
     .content {
-      width: 100%;
-      max-width: 420px;
       padding: 0 10px;
       .navigation {
         margin: 15px 0;

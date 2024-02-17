@@ -84,7 +84,6 @@ ${
           </div>
         </div>
       </div>
-     
     `;
   }
 
@@ -120,7 +119,7 @@ ${
           <div class="answer__likes likes">
             <div  id="counterMinus${
               this.id
-            } class="answer__like-button answer__like-button--minus"">-</div>
+            }" class="answer__like-button answer__like-button--minus">-</div>
             <div id="counterNumber${this.id}" class="answer__like-count" >${
       this.like
     }</div>

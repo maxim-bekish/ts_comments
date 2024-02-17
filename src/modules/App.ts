@@ -10,15 +10,13 @@ export class App {
   private img__avatarID_Img: HTMLImageElement;
   private h3__user: HTMLElement;
   private textarea__textarea: HTMLTextAreaElement;
-  private submit__submit: HTMLButtonElement;
+  private submit: HTMLButtonElement;
   private newData: UserData;
   constructor() {
     this.div__avatar_ID = document.getElementById("avatarID");
     this.img__avatarID_Img = document.createElement("img");
     this.h3__user = document.getElementById("user");
-    this.submit__submit = document.getElementById(
-      "submit"
-    ) as HTMLButtonElement;
+    this.submit = document.getElementById("submit") as HTMLButtonElement;
     this.textarea__textarea = document.getElementById(
       "textarea"
     ) as HTMLTextAreaElement;
@@ -59,9 +57,10 @@ export class App {
   }
 
   private setupCommentSubmission(newData: UserData): void {
-    validInput(this.textarea__textarea, this.submit__submit, true);
+    validInput(this.textarea__textarea, this.submit, true);
 
-    this.submit__submit.addEventListener("click", () => {
+    this.submit.addEventListener("click", () => {
+      this.textarea__textarea.style.height = "auto";
       document.getElementById("counterText").innerText = "Макс.  1000 символов";
       Comments.newUser(newData, this.textarea__textarea.value);
       this.textarea__textarea.value = "";
@@ -185,13 +184,13 @@ export class App {
   addNewAnswer(
     button: HTMLButtonElement,
     input: HTMLTextAreaElement,
-    buttonClosed:HTMLButtonElement,
+    buttonClosed: HTMLButtonElement,
     commentId: string,
     allCommentsFromLocalStorage: CommentData[],
     wrapperForm: HTMLElement
   ): void {
     validInput(input, button, false);
-buttonClosed.addEventListener('click',()=>  wrapperForm.remove())
+    buttonClosed.addEventListener("click", () => wrapperForm.remove());
     button.addEventListener("click", () => {
       wrapperForm.remove();
       const user = allCommentsFromLocalStorage.find(
@@ -222,7 +221,9 @@ buttonClosed.addEventListener('click',()=>  wrapperForm.remove())
   }
   answerFavorites(id: string, comments: CommentData): void {
     let element = document.getElementById(`favorites${id}`);
-    let elementFmg = document.getElementById(`imgFavorites${id}`) as HTMLImageElement;
+    let elementFmg = document.getElementById(
+      `imgFavorites${id}`
+    ) as HTMLImageElement;
     comments.answers.forEach((elAnswer) => {
       if (elAnswer.id === id) {
         if (elAnswer.favorites) {
