@@ -16,8 +16,7 @@ export function buildWebpack(options: BuildOptions): webpack.Configuration {
       path: paths.output,
       clean: true,
       filename: "[name].[contenthash].js",
-      assetModuleFilename: "assets/[name][ext]",
-      publicPath: '/'
+      assetModuleFilename: "assets/[name][ext]"
     },
     plugins: buildPlugins(options),
     module: {
