@@ -19,9 +19,5 @@ export default (evn: EvnVariables) => {
     paths,
   });
 
-    config.output = {
-      ...config.output,
-      publicPath: "/",
-    };
   return config;
 };
