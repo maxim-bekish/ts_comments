@@ -34,13 +34,12 @@ export class HTML_Comments {
   generateHTML(): string {
     // Генерация HTML для ответов
     return `
-
       <div class="comment__avatar avatar">
         <img src='${this.img}' alt="avatar" class="avatar__image" />
       </div>
       <div class="comment__body">
         <div class="comment__header">
-          <h3 class="comment__author" >${this.firstName}</h3>
+          <h3 class="comment__author title" >${this.firstName}</h3>
 ${
   this.firstNameComment
     ? `<img src="${share}" alt="share" class="comment__share-icon" />
@@ -96,7 +95,7 @@ ${
       <div class="answer__body">
         <div class="answer__header">
           <div>
-            <h3 class="answer__author" >${this.firstName}</h3>
+            <h3 class="answer__author title" >${this.firstName}</h3>
             <img src="${share}" alt="share" class="answer__share-icon" />
             <span class="answer__comment" >${this.firstNameComment}</span>
           </div>

@@ -1,6 +1,4 @@
 @mixin button {
-  font-size: $px18;
-  line-height: 22px;
   outline: none;
   border: 0;
   box-sizing: border-box;
@@ -14,8 +12,6 @@
 }
 @mixin input {
   resize: none;
-  font-size: $px18;
-  line-height: 22px;
   padding: 20px 20px 20px 30px;
   width: 100%;
   height: 61px;
@@ -32,20 +28,15 @@ $px18: 18px;
 $px14: 14px;
 $o40: 40%;
 
-.content-title {
-  font-size: $px18;
+.title {
   color: rgb(18, 42, 192);
   font-weight: 500;
-  line-height: 22px;
 }
-
 .content {
   width: 100%;
   max-width: 1050px;
   margin: 0 auto;
-  font-family: "Inter";
 }
-
 .navigation {
   margin: 25px 0 32px 0;
   display: flex;
@@ -55,10 +46,7 @@ $o40: 40%;
   .navigation__item--comments {
     padding-bottom: 3px;
     border-bottom: 3px solid rgb(0, 0, 0);
-    font-size: $px18;
     font-weight: 500;
-    line-height: 24px;
-
     :nth-child(2) {
       opacity: $o40;
     }
@@ -75,13 +63,9 @@ $o40: 40%;
         white-space: nowrap;
         text-decoration: underline;
         display: block;
-        font-family: "Inter";
         padding: 10px;
-        font-size: $px18;
         opacity: $o40;
-        line-height: 19px;
       }
-
       .navigation__filter-options-list {
         border-radius: 5px;
         list-style: none;
@@ -95,14 +79,9 @@ $o40: 40%;
         background-color: rgb(255, 255, 255);
         box-shadow: 0 0px 10px rgba(0, 0, 0, 0.102);
         display: none;
-
         li {
-          font-family: "Inter";
           padding: 10px;
-          font-size: $px18;
           opacity: $o40;
-          line-height: 19px;
-
           &:hover {
             background-color: rgb(242, 242, 242);
           }
@@ -111,11 +90,7 @@ $o40: 40%;
     }
     .navigation__filter-favorites {
       text-decoration: underline;
-      font-size: $px18;
-      font-weight: 400;
-      line-height: 19px;
       letter-spacing: 0em;
-
       display: flex;
       align-items: center;
       gap: 5px;
@@ -129,7 +104,7 @@ $o40: 40%;
     }
   }
 }
-//-----------------//-----------------//-----------------//
+//-----------------//-----------------//
 .form {
   display: flex;
   gap: 30px;
@@ -138,16 +113,15 @@ $o40: 40%;
     flex-direction: column;
     flex-grow: 1;
     gap: 15px;
-    span {
+    .form__content-counter {
       font-size: $px14;
       font-style: italic;
-      line-height: 17px;
       opacity: $o40;
     }
     textarea {
       @include input;
     }
-    :nth-child(1) {
+    .form__content-title {
       display: flex;
       justify-content: space-between;
     }
@@ -160,7 +134,7 @@ $o40: 40%;
     }
   }
 }
-//-----------------//-----------------//-----------------//
+//-----------------//-----------------//
 .commentForm {
   gap: 30px;
   display: flex;
@@ -173,29 +147,14 @@ $o40: 40%;
       display: flex;
       flex-direction: column;
       gap: 15px;
-
       .comment__header {
         display: flex;
         gap: 15px;
         align-items: center;
-
-        .comment__author {
-        }
         .comment__timestamp {
           font-size: $px14;
-          line-height: 17px;
           opacity: $o40;
         }
-
-        .comment__reply {
-          font-size: $px18;
-          border: 1px solid black;
-        }
-      }
-
-      .comment__content {
-        font-size: $px18;
-        line-height: 22px;
       }
       .comment__footer {
         display: flex;
@@ -234,7 +193,6 @@ $o40: 40%;
       display: flex;
       flex-direction: column;
       gap: 15px;
-
       .answer__header {
         display: flex;
         flex-direction: row;
@@ -250,14 +208,8 @@ $o40: 40%;
         }
         span {
           font-size: $px14;
-          line-height: 17px;
           opacity: $o40;
         }
-      }
-
-      .answer__content {
-        font-size: $px18;
-        line-height: 22px;
       }
       .answer__footer {
         display: flex;
@@ -270,7 +222,6 @@ $o40: 40%;
           display: flex;
           align-items: center;
           gap: 10px;
-
           span {
             cursor: pointer;
             opacity: $o40;
@@ -285,7 +236,7 @@ $o40: 40%;
   .wrapperForm {
     display: flex;
     gap: 30px;
-    max-width: 50vw;
+    max-width: 100%;
     margin-left: 90px;
     textarea {
       @include input;
@@ -306,9 +257,7 @@ $o40: 40%;
 }
 
 .likes {
-  font-size: $px18;
   font-weight: 500;
-  line-height: 22px;
   display: flex;
   align-items: center;
   gap: 10px;
@@ -380,7 +329,7 @@ $o40: 40%;
         flex-direction: column;
 
         .form__content {
-          :nth-child(1) {
+          .form__content-title {
             margin-top: 7px;
             display: flex;
             flex-direction: column;
@@ -393,7 +342,7 @@ $o40: 40%;
               align-items: flex-start;
             }
           }
-          :nth-child(2) {
+          .form__content-input {
             textarea {
               padding: 10px;
             }

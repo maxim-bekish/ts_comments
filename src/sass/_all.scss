@@ -31,9 +31,13 @@ dd {
 
 /* Выставляем основные настройки по-умолчанию для body */
 body {
+  font-family: 'Inter';
+  line-height: 22px;
+  font-size: 18px;
   min-height: 100vh;
   scroll-behavior: smooth;
   text-rendering: optimizeSpeed;
+
 }
 
 /* Удаляем стандартную стилизацию для всех ul и il, у которых есть атрибут class*/
