@@ -9,7 +9,7 @@ interface EvnVariables {
 }
 export default (evn: EvnVariables) => {
   const paths: BuildPaths = {
-    output: path.resolve(__dirname, "build"),
+    output: path.resolve(__dirname, "dist"),
     entry: path.resolve(__dirname, "src", "index.ts"),
     html: path.resolve(__dirname, "public", "index.html"),
   };
